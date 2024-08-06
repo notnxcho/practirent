@@ -1,16 +1,28 @@
 import { Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext'
+import { PropertiesProvider } from './contexts/PropertiesContext'
 import PrivateRoute from './routes/PrivateRoute'
-import Home from './components/home/Home'
-import Login from './components/login/Login'
+import Home from './pages/home/Home'
+import Login from './components/auth/Login'
+import Signup from './components/auth/Signup'
+import Properties from './pages/properties/Properties'
+import PropertyDetails from './pages/properties/PropertyDetails'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<PrivateRoute component={Home} />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
+      <PropertiesProvider>
+        <Routes>
+          <Route path="/" element={<PrivateRoute component={Home} />} />
+          <Route path="/properties" element={<PrivateRoute component={Properties} />} />
+          <Route path="/properties/:id" element={<PrivateRoute component={PropertyDetails} />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Routes>
+        <ToastContainer />
+      </PropertiesProvider>
     </AuthProvider>
   )
 }

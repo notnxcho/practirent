@@ -1,0 +1,31 @@
+.property-card-container {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    cursor: pointer;
+    &:hover {
+        box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.04);
+    }
+    .property-card-header {
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        .property-card-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            .title {
+                font-size: 18px;
+                font-weight: 500;
+            }
+            .padron {
+                font-size: 14px;
+                font-weight: 400;
+                color: #606060;
+            }
+        }
+    }
+}
