@@ -6,6 +6,7 @@ import { getUserProperties } from '../../services/firestoreService'
 import { useAuth } from 'src/contexts/AuthContext'
 import PropertyLayout from '../layout/PropertyLayout'
 import AddressWidget from 'src/components/addressWidget/AddressWidget'
+import PropertyExpensesTab from 'src/components/propertyExpensesTab/PropertyExpensesTab'
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>()
@@ -32,14 +33,8 @@ const PropertyDetails = () => {
           <AddressWidget address={property.address} /></div>
           }
         { tabs[1].active && <div>Income</div>}
-        { tabs[2].active && <div>Expenses</div>}
+        { tabs[2].active && <PropertyExpensesTab property={property}/>}
 
-
-
-          {/* <h1>{property.name}</h1>
-          <p>{property.description}</p>
-          <p>Market Value: {property.marketValue.amount} {property.marketValue.currency.symbol}</p>
-          <p>Padron: {property.padron}</p> */}
         </div>
       )}
     </PropertyLayout>

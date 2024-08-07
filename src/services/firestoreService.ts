@@ -1,7 +1,7 @@
 import { collection, addDoc, getDoc, doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { firestoreDB } from "../firebase";
 import { User } from "../types/user";
-import { Property } from "src/types/property";
+import { Expense, Property } from "src/types/property";
 
 export const addUserDocument = async (user: User) => {
     try {
@@ -47,3 +47,16 @@ export const getUserProperties = async (userId: string) => {
         return []
     }
 }
+
+export const addPropertyExpense = async (userId: string, propertyId: string, expense: Expense) => {
+    const propertyRef = doc(firestoreDB, 'users', userId, 'properties', propertyId)
+    const propertyDoc = await getDoc(propertyRef)
+    if (propertyDoc.exists()) {
+        const propertyData = propertyDoc.data()
+        const updatedExpenses = [...propertyData.expenses, expense]
+        await updateDoc(propertyRef, { expenses: updatedExpenses })
+    } else {
+        console.error("Property document does not exist")
+    }
+}
+

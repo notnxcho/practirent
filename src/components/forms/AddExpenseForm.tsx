@@ -1,7 +1,7 @@
 import './formStyles.scss'
 import CurrencyInput from '../common/CurrencyInput/CurrencyInput'
 
-const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: any) => {
+const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol}: any) => {
     return (
         <>
             <div className='input-wrap'>
@@ -34,4 +34,4 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
     )
 }
 
-export default AddPropertyForm
+export default AddExpenseForm

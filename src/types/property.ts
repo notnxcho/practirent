@@ -1,13 +1,13 @@
 export type Property = {
     id: string,
     name: string,
-    description: string,
-    marketValue: MonetaryAmount,
-    image: string[],
-    padron: string,
-    income: Income[],
-    tenant: Tenant,
-    expenses: Expense[],
+    description?: string,
+    marketValue?: MonetaryAmount,
+    image?: string[],
+    padron?: string,
+    income?: Income[],
+    tenant?: Tenant,
+    expenses?: Expense[],
     address: Address,
 }
 
@@ -24,6 +24,7 @@ export type Address = {
 }
 
 export type Income = {
+    id: string,
     amount: MonetaryAmount,
     frequency: Frequency,
     history: IncomePayment[]
@@ -49,7 +50,7 @@ export type Frequency = {
     unit: "m" | 'y' | 'w',
 }
 export type MonetaryAmount = {
-    amount: number,
+    amount: number | undefined,
     currency: Currency,
 }
 export type Currency = {
@@ -66,6 +67,7 @@ export type Contract = {
 }
 
 export type Expense = {
+    id: string,
     amount: MonetaryAmount,
     frequency: Frequency,
     description: string,
