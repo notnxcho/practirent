@@ -13,12 +13,12 @@ const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, fr
     return (
         <>
             <div className='input-wrap'>
-                <label htmlFor="name" className="label">Description</label>
-                <input id="name" {...register('description', { required: true })} className="input" />
+                <label htmlFor="description" className="label">Description</label>
+                <input id="description" {...register('description', { required: true })} className="input" />
                 {errors.name && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
             <div className="input-wrap">
-                <label htmlFor="Frequency" className="label">Frequency</label>
+                <label htmlFor="frequency" className="label">Frequency</label>
                 <div className="chip-selection-wrapper">
                     {frequencies.map((freq) => (
                         <div key={freq.frequency} className={`chip ${freq.frequency === frequency.frequency ? 'selected' : ''}`} onClick={() => setFrequency(freq)}>
@@ -28,20 +28,20 @@ const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, fr
                 </div>
             </div>
             <div className='input-wrap'>
-                <label htmlFor="Amount" className="label">Amount</label>
+                <label htmlFor="amount" className="label">Amount</label>
                 <CurrencyInput passId="amount" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
                 {errors.amount && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
             <div className='input-wrap'>
-                <label htmlFor="date" className="label">Date</label>
+                <label htmlFor="indexDate" className="label">Index date</label>
                 <input 
                     type="date" 
-                    id="date" 
-                    {...register('date', { required: true })} 
+                    id="indexDate" 
+                    {...register('indexDate', { required: true })} 
                     className="input" 
                     onKeyDown={(e) => e.preventDefault()} // Prevent manual input
                 />
-                {errors.date && <span className="text-red-500 text-xs">This field is required</span>}
+                {errors.indexDate && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
         </>
     )

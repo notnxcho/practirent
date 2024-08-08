@@ -15,7 +15,7 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
         <div className="property-expenses-tab">
             <div className="header">
                 Expenses
-                <Button onClick={toggleOpenDialog}>Add Expense</Button>
+                <Button onClick={toggleOpenDialog} className='mt-4'>Add Expense</Button>
             </div>
             <div className="expenses-grid">
                 {property?.expenses?.map((expense) => (

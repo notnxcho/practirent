@@ -12,7 +12,7 @@ export const addUserDocument = async (user: User) => {
         })
         console.log("Document written with ID: ", user.id);
     } catch (e) {
-        console.error("Error adding document: ", e);
+        throw new Error("Error adding document")
     }
 }
 
@@ -34,7 +34,7 @@ export const addUserProperty = async (userId: string, property: Property) => {
     const updatedProperties = [...userData.properties, property]
     await updateDoc(userRef, { properties: updatedProperties })
   } else {
-    console.error("User document does not exist")
+    throw new Error("User document does not exist")
   }
 }
 
@@ -48,15 +48,33 @@ export const getUserProperties = async (userId: string) => {
     }
 }
 
-export const addPropertyExpense = async (userId: string, propertyId: string, expense: Expense) => {
+export const getUserProperty = async (userId: string, propertyId: string) => {
     const propertyRef = doc(firestoreDB, 'users', userId, 'properties', propertyId)
     const propertyDoc = await getDoc(propertyRef)
     if (propertyDoc.exists()) {
-        const propertyData = propertyDoc.data()
-        const updatedExpenses = [...propertyData.expenses, expense]
-        await updateDoc(propertyRef, { expenses: updatedExpenses })
+        return propertyDoc.data()
     } else {
-        console.error("Property document does not exist")
+        return null
     }
 }
 
+export const addPropertyExpense = async (userId: string, propertyId: string, expense: Expense) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const updatedExpenses = [...(property.expenses || []), expense]
+            properties[propertyIndex] = { ...property, expenses: updatedExpenses }
+            await updateDoc(userRef, { properties })
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}

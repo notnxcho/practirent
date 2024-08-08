@@ -22,7 +22,7 @@ const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
 
     const onSubmit: SubmitHandler<Property> = data => {
         setLoading(true)
-        const propertyWithId = { ...data, id: doc(collection(firestoreDB, 'properties')).id, marketValue: { amount: data.marketValue?.amount, currency: currencySymbol } }
+        const propertyWithId = { ...data, id: doc(collection(firestoreDB, 'properties')).id, marketValue: { amount: data.marketValue?.amount, currency: currencySymbol }, expenses: [], incomes: []}
         console.log('data del form', propertyWithId)
 
         addUserProperty(currentUser.id, propertyWithId).then(() => {
@@ -48,7 +48,7 @@ const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
                     <AddPropertyForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                    <Button type='submit' loading={loading} fullWidth >Add Property</Button>
+                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Property</Button>
                 </form>
             </div>
         </div>

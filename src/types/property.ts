@@ -82,4 +82,5 @@ export type ExpensePayment = {
     amount: MonetaryAmount,
     date: Date,
     reference: string,
+    completed: boolean,
 }

@@ -17,24 +17,59 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
     const { currentUser } = useAuth()
     const { register, handleSubmit, formState: { errors } } = useForm<Expense>()
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
-    const [frequency, setFrequency] = useState<Frequency>({ frequency: 'monthly', value: 1, unit: 'm' })
+    const [frequency, setFrequency] = useState<Frequency>({ frequency: 'Monthly', value: 1, unit: 'm' })
     const [loading, setLoading] = useState(false)
+
+    const calculateThreePreviousPayments = (data: Expense) => {
+        const payments = []
+        for (let i = 1; i <= 3; i++) {
+            payments.push({
+                id: doc(collection(firestoreDB, 'expenses')).id,
+                amount: { amount: data.amount?.amount, currency: currencySymbol },
+                date: frequency.unit === 'm' 
+                    ? new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() - (frequency.value * i)))
+                    : new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() - (frequency.value * i))),
+                reference: 'Payment previous creation ' + -i,
+                completed: true
+            })
+        }
+        return payments
+    }
+    const calculateThreeNextPayments = (data: Expense) => {
+        const payments = []
+        for (let i = 0; i <= 3; i++) {
+            payments.push({
+                id: doc(collection(firestoreDB, 'expenses')).id,
+                amount: { amount: data.amount?.amount, currency: currencySymbol },
+                date: frequency.unit === 'm' 
+                    ? new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() + (frequency.value * i)))
+                    : new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() + (frequency.value * i))),
+                reference: 'Payment post creation ' + i,
+                completed: false
+            })
+        }
+        return payments
+    }
 
     const onSubmit: SubmitHandler<Expense> = data => {
         setLoading(true)
-        const expenseWithId = { ...data, id: doc(collection(firestoreDB, 'expenses')).id, amount: { amount: data.amount?.amount, currency: currencySymbol } }
-        console.log('data del form', expenseWithId)
-
-        // addPropertyExpense(currentUser.id, propertyId, expenseWithId).then(() => {
-        //     addPropertyOptimistically(expenseWithId)
-        //     toast.success('Expense added successfully')
-        //     close()
-        // }).catch((error) => {
-        //     console.error('Error adding expense', error)
-        //     toast.error('Failed to add expense')
-        // }).finally(() => {
-        //     setLoading(false)
-        // })
+        let updateExpense = {
+            ...data,
+            id: doc(collection(firestoreDB, 'expenses')).id,
+            amount: { amount: data.amount?.amount, currency: currencySymbol },
+            frequency: frequency,
+            history: [...calculateThreePreviousPayments(data), ...calculateThreeNextPayments(data)]
+        }
+        console.log('data del form', updateExpense)
+        addPropertyExpense(currentUser.id, propertyId, updateExpense).then(() => {
+            toast.success('Expense added successfully')
+            close()
+        }).catch((error) => {
+            console.error('Error adding expense', error)
+            toast.error('Failed to add expense')
+        }).finally(() => {
+            setLoading(false)
+        })
     }
 
     return (
@@ -55,7 +90,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                         frequency={frequency}
                         setFrequency={setFrequency} 
                     />
-                    <Button type='submit' loading={loading} fullWidth size='large'>Add Expense</Button>
+                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Expense</Button>
                 </form>
             </div>
         </div>

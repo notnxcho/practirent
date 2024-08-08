@@ -7,6 +7,7 @@
     background-color: #000;
     color: #fff;
     cursor: pointer;
+    font-weight: 500;
     transition: background-color 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     &.size-medium {
         padding: 8px 12px; 
