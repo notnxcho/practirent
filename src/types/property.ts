@@ -25,6 +25,8 @@ export type Address = {
 
 export type Income = {
     id: string,
+    indexDate: Date,
+    description: string,
     amount: MonetaryAmount,
     frequency: Frequency,
     history: IncomePayment[]
@@ -68,6 +70,7 @@ export type Contract = {
 
 export type Expense = {
     id: string,
+    indexDate: Date,
     amount: MonetaryAmount,
     frequency: Frequency,
     description: string,

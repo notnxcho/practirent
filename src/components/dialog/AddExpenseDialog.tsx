@@ -1,4 +1,4 @@
-import { Expense } from 'src/types/property'
+import { Expense, Frequency } from 'src/types/property'
 import AddExpenseForm from '../forms/AddExpenseForm'
 import './dialogStyles.scss'
 import { Xmark } from 'iconoir-react'
@@ -17,8 +17,8 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
     const { currentUser } = useAuth()
     const { register, handleSubmit, formState: { errors } } = useForm<Expense>()
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
+    const [frequency, setFrequency] = useState<Frequency>({ frequency: 'monthly', value: 1, unit: 'm' })
     const [loading, setLoading] = useState(false)
-    const { addPropertyOptimistically } = useProperties()
 
     const onSubmit: SubmitHandler<Expense> = data => {
         setLoading(true)
@@ -47,8 +47,15 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                     </div>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
-                    <AddExpenseForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                    <Button type='submit' loading={loading} fullWidth >Add Expense</Button>
+                    <AddExpenseForm 
+                        errors={errors}
+                        register={register}
+                        currencySymbol={currencySymbol}
+                        setCurrencySymbol={setCurrencySymbol}
+                        frequency={frequency}
+                        setFrequency={setFrequency} 
+                    />
+                    <Button type='submit' loading={loading} fullWidth size='large'>Add Expense</Button>
                 </form>
             </div>
         </div>
