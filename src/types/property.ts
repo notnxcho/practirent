@@ -80,7 +80,7 @@ export type Expense = {
 export type ExpensePayment = {
     id: string,
     amount: MonetaryAmount,
-    date: Date,
+    date: Date | string,
     reference: string,
     completed: boolean,
 }

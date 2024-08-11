@@ -27,9 +27,9 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                 id: doc(collection(firestoreDB, 'expenses')).id,
                 amount: { amount: data.amount?.amount, currency: currencySymbol },
                 date: frequency.unit === 'm' 
-                    ? new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() - (frequency.value * i)))
-                    : new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() - (frequency.value * i))),
-                reference: 'Payment previous creation ' + -i,
+                    ? (new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() - (frequency.value * i)))).toISOString().split('T')[0]
+                    : (new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() - (frequency.value * i)))).toISOString().split('T')[0],
+                    reference: 'Payment previous creation ' + -i,
                 completed: true
             })
         }
@@ -42,13 +42,13 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                 id: doc(collection(firestoreDB, 'expenses')).id,
                 amount: { amount: data.amount?.amount, currency: currencySymbol },
                 date: frequency.unit === 'm' 
-                    ? new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() + (frequency.value * i)))
-                    : new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() + (frequency.value * i))),
+                    ? (new Date(new Date(data.indexDate).setMonth(new Date(data.indexDate).getMonth() + (frequency.value * i)))).toISOString().split('T')[0]
+                    : (new Date(new Date(data.indexDate).setFullYear(new Date(data.indexDate).getFullYear() + (frequency.value * i)))).toISOString().split('T')[0],
                 reference: 'Payment post creation ' + i,
                 completed: false
             })
         }
-        return payments
+        return payments.reverse()
     }
 
     const onSubmit: SubmitHandler<Expense> = data => {
