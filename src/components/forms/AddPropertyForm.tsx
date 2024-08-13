@@ -13,22 +13,47 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
                 <label htmlFor="description" className="label">Description</label>
                 <textarea id="description" {...register('description')} className="input h-fit max-h-[90px] min-h-[60px]" />
                 {errors.description && <span className="text-red-500 text-xs">This field is required</span>}
-                
             </div>
-            <div className='input-wrap'>
-                <label htmlFor="marketValue" className="label">Market Value</label>
-                <CurrencyInput passId="marketValue" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                {errors.marketValue && <span className="text-red-500 text-xs">This field is required</span>}
-            </div>
-            <div className='input-wrap'>
-                <label htmlFor="padron" className="label">Padron</label>
-                <input id="padron" {...register('padron')} className="input" />
-                {errors.padron && <span className="text-red-500 text-xs">This field is required</span>}
+            <div className="flex gap-3">
+                <div className='input-wrap'>
+                    <label htmlFor="marketValue" className="label">Market Value</label>
+                    <CurrencyInput passId="marketValue" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
+                    {errors.marketValue && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
+                <div className='input-wrap'>
+                    <label htmlFor="padron" className="label">Padron</label>
+                    <input id="padron" {...register('padron')} className="input" />
+                    {errors.padron && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
             </div>
             <div className='input-wrap'>
                 <label htmlFor="addressString" className="label">Address</label>
                 <input id="addressString" {...register('address.addressString', { required: true })} className="input" />
                 {errors.address?.addressString && <span className="text-red-500 text-xs">This field is required</span>}
+            </div>
+            <div className="flex gap-3">
+                <div className='input-wrap'>
+                    <label htmlFor="street" className="label">Street</label>
+                    <input id="street" {...register('address.street', { required: true })} className="input" />
+                    {errors.address?.street && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
+                <div className='input-wrap'>
+                    <label htmlFor="streetNumber" className="label">Street Number</label>
+                    <input id="streetNumber" {...register('address.streetNumber', { required: true })} className="input" />
+                    {errors.address?.streetNumber && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
+            </div>
+            <div className="flex gap-3">
+                <div className='input-wrap'>
+                    <label htmlFor="city" className="label">City</label>
+                    <input id="city" {...register('address.city', { required: true })} className="input" />
+                    {errors.address?.city && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
+                <div className='input-wrap'>
+                    <label htmlFor="department" className="label">Department</label>
+                    <input id="department" {...register('address.department', { required: true })} className="input" />
+                    {errors.address?.department && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
             </div>
         </>
     )

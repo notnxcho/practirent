@@ -41,7 +41,8 @@ const PropertyDetails = () => {
       {!property ? <div>Loading...</div> : (  
       <div className="layout-content-container" style={{marginTop: 0}}>
         { tabs[0].active && <div className='flex p-6'>
-          <AddressWidget address={property.address} /></div>
+          <AddressWidget address={property.address} />
+          </div>
           }
         { tabs[1].active && <div>Income</div>}
         { tabs[2].active && <PropertyExpensesTab property={property}/>}

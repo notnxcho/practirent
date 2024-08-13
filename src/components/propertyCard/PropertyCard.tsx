@@ -15,6 +15,7 @@ const PropertyCard = ({property}: {property: Property}) => {
                 <div className="property-card-title">
                     <div className="title">{property.name}</div>
                     <div className="padron">{property.padron}</div>
+                    <div className="address">{property.address.addressString}</div>
                 </div>
             </div>
         </div>
