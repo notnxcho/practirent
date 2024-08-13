@@ -5,7 +5,7 @@ import { Property } from "src/types/property"
 import { useState } from 'react'
 import EditPropertyDialog from 'src/components/dialog/EditPropertyDialog'
 
-const PropertyLayout = ({ children, property, tabs, setTabs }: { children: React.ReactNode, property: Property | null, tabs: {name: string, active: boolean}[], setTabs: any}) => {
+const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }: { children: React.ReactNode, property: Property | null, tabs: {name: string, active: boolean}[], setTabs: any, onUpdateProperty: (updatedProperty: Property) => void}) => {
     const navigate = useNavigate()
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
