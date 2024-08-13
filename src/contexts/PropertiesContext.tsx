@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { getUserProperties } from 'src/services/firestoreService'
-import { Property } from 'src/types/property'
+import { Expense, Property } from 'src/types/property'
 import { useAuth } from 'src/contexts/AuthContext'
 
 interface PropertiesContextType {
@@ -9,6 +9,8 @@ interface PropertiesContextType {
   fetchProperties: () => void
   addPropertyOptimistically: (property: Property) => void
   updatePropertyOptimistically: (updatedProperty: Property) => void
+  addExpenseOptimistically: (propertyId: string, expense: Expense) => void
+  updateExpenseOptimistically: (propertyId: string, updatedExpense: Expense) => void
 }
 
 const PropertiesContext = createContext<PropertiesContextType | undefined>(undefined)
@@ -46,12 +48,37 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
     setProperties(prevProperties => prevProperties.map(prop => prop.id === updatedProperty.id ? updatedProperty : prop))
   }
 
+  const addExpenseOptimistically = (propertyId: string, expense: Expense) => {
+    setProperties(prevProperties =>
+      prevProperties.map(prop =>
+        prop.id === propertyId
+          ? { ...prop, expenses: [...(prop.expenses || []), expense] }
+          : prop
+      )
+    )
+  }
+
+  const updateExpenseOptimistically = (propertyId: string, updatedExpense: Expense) => {
+    setProperties(prevProperties =>
+      prevProperties.map(prop =>
+        prop.id === propertyId
+          ? {
+              ...prop,
+              expenses: prop.expenses?.map(exp =>
+                exp.id === updatedExpense.id ? updatedExpense : exp
+              )
+            }
+          : prop
+      )
+    )
+  }
+
   useEffect(() => {
     fetchProperties()
   }, [currentUser])
 
   return (
-    <PropertiesContext.Provider value={{ properties, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically }}>
+    <PropertiesContext.Provider value={{ properties, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically, addExpenseOptimistically, updateExpenseOptimistically }}>
       {children}
     </PropertiesContext.Provider>
   )

@@ -20,12 +20,12 @@ const Button = ({
         icon?: React.ReactNode, 
         iconPosition?: 'left' | 'right', 
         type?: 'button' | 'submit' | 'reset',
-        variant?: 'primary' | 'secondary',
+        variant?: 'primary' | 'secondary' | 'danger',
         fullWidth?: boolean,
         size?: 'small' | 'medium' | 'large'
     }) => {
     return (
-        <button className={`button-container ${variant} ${className} ${disabled && 'disabled'} ${fullWidth && 'full-width'} ${size && `size-${size}`}`} type={type} onClick={onClick}>
+        <button className={`button-container ${variant} ${className} ${disabled && 'disabled'} ${fullWidth && 'full-width'} ${size && `size-${size}`}`} type={type} disabled={disabled} onClick={onClick}>
             {loading ? <div>Loading ...</div> : 
                 <div>
                     {icon && iconPosition === 'left' && icon}

@@ -33,7 +33,7 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
                 </div>
                 {openDialog && <AddExpenseDialog isOpen={openDialog} close={toggleOpenDialog} propertyId={property.id} />}
             </div>
-            <ExpenseDetails expense={selectedExpense} onClose={() => setSelectedExpense(null)} />
+            <ExpenseDetails expense={selectedExpense} property={property} onClose={() => setSelectedExpense(null)} />
         </div>
     )
 }

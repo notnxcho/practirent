@@ -12,7 +12,6 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
             <div className='input-wrap'>
                 <label htmlFor="description" className="label">Description</label>
                 <textarea id="description" {...register('description')} className="input h-fit max-h-[90px] min-h-[60px]" />
-                {errors.description && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
             <div className="flex gap-3">
                 <div className='input-wrap'>
@@ -23,7 +22,6 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
                 <div className='input-wrap'>
                     <label htmlFor="padron" className="label">Padron</label>
                     <input id="padron" {...register('padron')} className="input" />
-                    {errors.padron && <span className="text-red-500 text-xs">This field is required</span>}
                 </div>
             </div>
             <div className='input-wrap'>
@@ -39,8 +37,7 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
                 </div>
                 <div className='input-wrap'>
                     <label htmlFor="streetNumber" className="label">Street Number</label>
-                    <input id="streetNumber" {...register('address.streetNumber', { required: true })} className="input" />
-                    {errors.address?.streetNumber && <span className="text-red-500 text-xs">This field is required</span>}
+                    <input id="streetNumber" {...register('address.streetNumber')} className="input" />
                 </div>
             </div>
             <div className="flex gap-3">

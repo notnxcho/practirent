@@ -19,6 +19,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
     const [frequency, setFrequency] = useState<Frequency>({ frequency: 'Monthly', value: 1, unit: 'm' })
     const [loading, setLoading] = useState(false)
+    const { addExpenseOptimistically } = useProperties()
 
     const calculateThreePreviousPayments = (data: Expense) => {
         const payments = []
@@ -63,6 +64,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
         console.log('data del form', updateExpense)
         addPropertyExpense(currentUser.id, propertyId, updateExpense).then(() => {
             toast.success('Expense added successfully')
+            addExpenseOptimistically(propertyId, updateExpense)
             close()
         }).catch((error) => {
             console.error('Error adding expense', error)

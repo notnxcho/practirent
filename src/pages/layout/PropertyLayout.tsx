@@ -4,10 +4,17 @@ import Button from "src/components/common/Button/Button"
 import { Property } from "src/types/property"
 import { useState } from 'react'
 import EditPropertyDialog from 'src/components/dialog/EditPropertyDialog'
+import { Trash } from "iconoir-react"
+import DeletePropertyDialog from 'src/components/dialog/DeletePropertyDialog'
+import { deleteProperty } from 'src/services/firestoreService'
+import { useAuth } from 'src/contexts/AuthContext'
+import { toast } from "react-toastify"
 
 const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }: { children: React.ReactNode, property: Property | null, tabs: {name: string, active: boolean}[], setTabs: any, onUpdateProperty: (updatedProperty: Property) => void}) => {
     const navigate = useNavigate()
     const [openEditDialog, setOpenEditDialog] = useState(false)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+    const { currentUser } = useAuth()
 
     return (
         <div className="flex flex-col min-h-[100vh]">
@@ -27,7 +34,13 @@ const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }:
                             <div className="shimmer w-[100px] h-[22px]"></div>
                         </div>
                     }
-                    <Button variant='secondary' onClick={() => setOpenEditDialog(true)}>Edit Property</Button>
+                    <div className="flex gap-3">
+                        <Button variant='secondary' onClick={() => setOpenEditDialog(true)}>Edit Property</Button>
+                        <div className="square-button bg-[#ffdfda]" style={{border: 'none'}} onClick={() => setOpenDeleteDialog(true)}>
+                            <Trash color="#ff4400" width={20} height={20}/>
+                            <div className="tooltip">Delete</div>
+                        </div>
+                    </div>
                 </div>
                 <div className="flex gap-3 mt-4">
                 {tabs.map((t)=>(
@@ -39,6 +52,16 @@ const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }:
             </div>
             {children}
             {openEditDialog && property && <EditPropertyDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} property={property} />}
+            {openDeleteDialog && property && <DeletePropertyDialog isOpen={openDeleteDialog} close={() => setOpenDeleteDialog(false)} property={property} onDelete={async () => {
+                try {
+                    await deleteProperty(currentUser.id, property.id)
+                    setOpenDeleteDialog(false)
+                    navigate('/properties')
+                    toast.success('Property deleted successfully')
+                } catch (error) {
+                    toast.error('Error deleting property')
+                }
+            }} />}
         </div>
     )
 }

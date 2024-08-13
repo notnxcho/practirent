@@ -13,8 +13,13 @@ const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, fr
     return (
         <>
             <div className='input-wrap'>
+                <label htmlFor="title" className="label">Title</label>
+                <input id="title" {...register('title', { required: true })} className="input" />
+                {errors.name && <span className="text-red-500 text-xs">This field is required</span>}
+            </div>
+            <div className='input-wrap'>
                 <label htmlFor="description" className="label">Description</label>
-                <input id="description" {...register('description', { required: true })} className="input" />
+                <textarea id="description" {...register('description', { required: true })} className="input h-fit max-h-[160px] min-h-[90px]"/>
                 {errors.name && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
             <div className="input-wrap">

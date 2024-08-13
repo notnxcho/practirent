@@ -16,7 +16,7 @@ const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, s
                 if (!acc[currency]) {
                     acc[currency] = 0
                 }
-                acc[currency] += payment.amount.amount || 0
+                acc[currency] = +acc[currency] + (payment.amount.amount ? +payment.amount.amount : 0)
                 return acc
             }, {})
             return (
@@ -75,7 +75,7 @@ const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, s
 
     return (
         <div className={`property-expense-card ${selected && 'selected'}`} onClick={onSelect}>
-            <div className='desc'>{expense.description}</div>
+            <div className='desc'>{expense.title}</div>
             <div className='amount'>{expense.amount.currency.symbol} {expense.amount.amount} · {expense.frequency.frequency}</div>
             <div className="upcoming-box">
                 {renderUpcomingPayments()}

@@ -1,0 +1,57 @@
+.payment-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 12px 12px 16px;
+    align-items: center;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    background-color: #fff;
+    &.grayed-out {
+        background-color: #fcfcfc;
+        border: 2px dashed #d0d0d0;
+    }
+    .payment-info {
+      display: flex;
+      gap: 2px;
+      flex-direction: column;
+      .payment-date {
+        font-size: 14px;
+        font-weight: 600;
+        color: #606060;
+      }
+      .payment-reference {
+        font-size: 16px;
+        color: #404040;
+      }
+      .payment-amount {
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 8px;
+      }
+    }
+    .payment-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: max-content;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      &.completed {
+        background-color: #d3f8e4;
+        color: #18ac5a;
+        &:hover {
+            background-color: darken($color: #d3f8e4, $amount: 5%);
+        }
+      }
+      &.pending {
+        background-color: #ffedbf;
+        color: #ae7f0a;
+        &:hover {
+            background-color: darken($color: #ffedbf, $amount: 5%);
+        }
+      }
+    }
+  }

@@ -27,6 +27,7 @@ export type Income = {
     id: string,
     indexDate: Date,
     description: string,
+    title: string,
     amount: MonetaryAmount,
     frequency: Frequency,
     history: IncomePayment[]
@@ -57,7 +58,7 @@ export type MonetaryAmount = {
 }
 export type Currency = {
     currency: "usd" | "uyu",
-    symbol: "USD" | "$",
+    symbol: "USD" | "$U",
 }
 
 export type Contract = {
@@ -74,6 +75,7 @@ export type Expense = {
     amount: MonetaryAmount,
     frequency: Frequency,
     description: string,
+    title: string,
     history: ExpensePayment[]
 }
 
