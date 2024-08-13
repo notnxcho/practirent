@@ -2,11 +2,15 @@ import { useNavigate } from "react-router-dom"
 import BackButton from "src/components/common/BackButton/BackButton"
 import Button from "src/components/common/Button/Button"
 import { Property } from "src/types/property"
+import { useState } from 'react'
+import EditPropertyDialog from 'src/components/dialog/EditPropertyDialog'
 
 const PropertyLayout = ({ children, property, tabs, setTabs }: { children: React.ReactNode, property: Property | null, tabs: {name: string, active: boolean}[], setTabs: any}) => {
     const navigate = useNavigate()
+    const [openEditDialog, setOpenEditDialog] = useState(false)
+
     return (
-        <div>
+        <div className="flex flex-col min-h-[100vh]">
             <div className="property-layout-nav-cointainer flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                     <BackButton onClick={() => {navigate(-1)}}/>
@@ -23,7 +27,7 @@ const PropertyLayout = ({ children, property, tabs, setTabs }: { children: React
                             <div className="shimmer w-[100px] h-[22px]"></div>
                         </div>
                     }
-                    <Button variant='secondary'>Edit Property</Button>
+                    <Button variant='secondary' onClick={() => setOpenEditDialog(true)}>Edit Property</Button>
                 </div>
                 <div className="flex gap-3 mt-4">
                 {tabs.map((t)=>(
@@ -34,6 +38,7 @@ const PropertyLayout = ({ children, property, tabs, setTabs }: { children: React
                 </div>
             </div>
             {children}
+            {openEditDialog && property && <EditPropertyDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} property={property} />}
         </div>
     )
 }

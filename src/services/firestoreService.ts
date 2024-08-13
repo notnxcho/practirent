@@ -78,3 +78,22 @@ export const addPropertyExpense = async (userId: string, propertyId: string, exp
         throw new Error("User document does not exist")
     }
 }
+
+export const updateUserProperty = async (userId: string, updatedProperty: Property) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === updatedProperty.id)
+        
+        if (propertyIndex !== -1) {
+            properties[propertyIndex] = updatedProperty
+            await updateDoc(userRef, { properties })
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}

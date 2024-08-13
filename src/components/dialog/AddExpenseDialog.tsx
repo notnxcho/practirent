@@ -77,7 +77,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
             <div className="dialog-container">
                 <div className="header">
                     <div className="header-title">Create a new expense</div>
-                    <div className="close" onClick={close}>
+                    <div className="icon-box-close" onClick={close}>
                         <Xmark color="#404040"/>
                     </div>
                 </div>

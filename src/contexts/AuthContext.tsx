@@ -19,10 +19,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user: any) => {
-      console.log(user)
+      
       const loggedUser = user ? await getUserDocument(user.uid) : null
       
-      console.log("loggedUser", loggedUser)
       setCurrentUser(loggedUser)
       setLoading(false)
     })

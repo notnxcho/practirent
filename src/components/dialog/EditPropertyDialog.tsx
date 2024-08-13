@@ -3,35 +3,38 @@ import AddPropertyForm from '../forms/AddPropertyForm'
 import './dialogStyles.scss'
 import { Xmark } from 'iconoir-react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Currency } from 'src/types/property'
-import { addUserProperty } from 'src/services/firestoreService'
+import { updateUserProperty } from 'src/services/firestoreService'
 import { useAuth } from 'src/contexts/AuthContext'
 import { useProperties } from 'src/contexts/PropertiesContext'
 import { toast } from 'react-toastify'
-import { doc, collection } from 'firebase/firestore'
-import { firestoreDB } from '../../firebase'
 import Button from '../common/Button/Button'
 
-const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
+const EditPropertyDialog = ({ isOpen, close, property }: EditPropertyDialogProps) => {
     const { currentUser } = useAuth()
-    const { register, handleSubmit, formState: { errors } } = useForm<Property>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<Property>()
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
     const [loading, setLoading] = useState(false)
-    const { addPropertyOptimistically } = useProperties()
+    const { updatePropertyOptimistically } = useProperties()
+
+    useEffect(() => {
+        if (property) {
+            reset(property)
+            setCurrencySymbol(property.marketValue?.currency || { currency: 'usd', symbol: 'USD' })
+        }
+    }, [property, reset])
 
     const onSubmit: SubmitHandler<Property> = data => {
         setLoading(true)
-        const propertyWithId = { ...data, id: doc(collection(firestoreDB, 'properties')).id, marketValue: { amount: data.marketValue?.amount, currency: currencySymbol }, expenses: [], incomes: []}
-        console.log('data del form', propertyWithId)
-
-        addUserProperty(currentUser.id, propertyWithId).then(() => {
-            addPropertyOptimistically(propertyWithId)
-            toast.success('Property added successfully')
+        const updatedProperty = { ...data, marketValue: { amount: data.marketValue?.amount, currency: currencySymbol } }
+        updateUserProperty(currentUser.id, updatedProperty).then(() => {
+            updatePropertyOptimistically(updatedProperty)
+            toast.success('Property updated successfully')
             close()
         }).catch((error) => {
-            console.error('Error adding property', error)
-            toast.error('Failed to add property')
+            console.error('Error updating property', error)
+            toast.error('Failed to update property')
         }).finally(() => {
             setLoading(false)
         })
@@ -41,23 +44,24 @@ const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
         <div className="overlay">
             <div className="dialog-container">
                 <div className="header">
-                    <div className="header-title">Create a new property</div>
+                    <div className="header-title">Edit Property</div>
                     <div className="icon-box-close" onClick={close}>
                         <Xmark color="#404040"/>
                     </div>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
                     <AddPropertyForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Property</Button>
+                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Update Property</Button>
                 </form>
             </div>
         </div>
     )
 }
 
-interface PropertyDialogProps {
+interface EditPropertyDialogProps {
     isOpen: boolean
     close: () => void
+    property: Property
 }
 
-export default AddPropertyDialog
+export default EditPropertyDialog

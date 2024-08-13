@@ -2,7 +2,8 @@
     margin-top: 70px;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 70px);
+    // min-height: calc(100vh - 70px);
+    flex-grow: 1;
     background-color: #fafafa;
 }
 
@@ -83,7 +84,18 @@
         }
     }
 }
-
+.icon-box-close {
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+        background-color: #f0f0f0;
+    }
+}
 .properties-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -98,6 +110,7 @@
     border-bottom: 1px solid #eaeaea;
     box-shadow: 0 4px 12px 0px rgba(0, 0, 0, 0.08);
     width: 100%;
+    z-index: 4;
     .tab-body {
         display: flex;
         align-items: center;

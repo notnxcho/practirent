@@ -8,6 +8,7 @@ interface PropertiesContextType {
   loading: boolean
   fetchProperties: () => void
   addPropertyOptimistically: (property: Property) => void
+  updatePropertyOptimistically: (updatedProperty: Property) => void
 }
 
 const PropertiesContext = createContext<PropertiesContextType | undefined>(undefined)
@@ -41,12 +42,16 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
     setProperties(prevProperties => [...prevProperties, property])
   }
 
+  const updatePropertyOptimistically = (updatedProperty: Property) => {
+    setProperties(prevProperties => prevProperties.map(prop => prop.id === updatedProperty.id ? updatedProperty : prop))
+  }
+
   useEffect(() => {
     fetchProperties()
   }, [currentUser])
 
   return (
-    <PropertiesContext.Provider value={{ properties, loading, fetchProperties, addPropertyOptimistically }}>
+    <PropertiesContext.Provider value={{ properties, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically }}>
       {children}
     </PropertiesContext.Provider>
   )

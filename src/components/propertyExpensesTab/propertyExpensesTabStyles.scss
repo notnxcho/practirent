@@ -3,6 +3,8 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+    flex-grow: 1;
     .header {
         font-size: 18px;
         font-weight: 600;
@@ -12,7 +14,7 @@
     }
     .expenses-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
         gap: 16px;
         .property-expense-card {
             display: flex;
@@ -22,13 +24,121 @@
             background-color: #fcfcfc;
             padding: 16px;
             border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            &:hover {
+                box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+            }
+            &.selected {
+            outline: 2px solid #000;
+            outline-offset: 4px;
+            transform: translateY(-4px);
+            }
             .desc {
-                font-size: 16px;
+                font-size: 18px;
+                font-weight: 500;
             }
             .amount {
                 font-size: 14px;
                 font-weight: 600;
                 color: #606060;
+            }
+            .upcoming-box {
+                display: flex;
+                width: 100%;
+                background-color: #f5f5f5;
+                padding: 8px 12px;
+                border-radius: 8px;
+                margin-top: 12px;
+                .pulsating-indicator {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 8px;
+                    animation: pulsate 1.5s infinite;
+                &.alert {
+                    background-color: #ff4d4d;
+                }
+                &.warning {
+                    background-color: #ffd000;
+                }
+                &.valid {
+                    background-color: #18ad5b;
+                }
+
+                @keyframes pulsate {
+                    0% {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: scale(1.25);
+                        opacity: 0.7;
+                    }
+                    100% {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+                }
+                }
+            }
+        }
+    }
+}
+
+.expense-details-container-wrap {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #fff;
+    border-left: 1px solid #e1e1e1;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.collapsed {
+        width: 0px;
+        position: relative;
+    }
+    .expense-details-container {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: 16px;
+        .square-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            .tooltip {
+                position: absolute;
+                top: 50%;
+                left: -4px;
+                background-color: #000;
+                color: #fff;
+                font-size: 14px;
+                padding: 4px 8px;
+                border-radius: 4px;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+                z-index: 100;
+                opacity: 0;
+                transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+                width: max-content;
+                transform: translateX(-75%) translateY(-50%);
+            }
+            &:hover {
+                background-color: #f5f5f5;
+                .tooltip {
+                    opacity: 1;
+                    transform: translateX(-100%) translateY(-50%);
+                }
             }
         }
     }

@@ -27,18 +27,6 @@
                 font-size: 20px;
                 font-weight: 500;
             }
-            .close {
-                cursor: pointer;
-                width: 28px;
-                height: 28px;
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                &:hover {
-                    background-color: #f0f0f0;
-                }
-            }
         }
     }
 }
