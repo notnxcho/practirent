@@ -11,18 +11,18 @@ import { useProperties } from 'src/contexts/PropertiesContext'
 import { toast } from 'react-toastify'
 import PaymentCard from '../paymentCard/PaymentCard'
 
-const ExpenseDetails = ({ expense, onClose, property }: { expense: Expense | null, onClose: () => void, property: Property }) => {
+const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: () => void, onClose: () => void, property: Property }) => {
     const [openEditDialog, setOpenEditDialog] = useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
     const { currentUser } = useAuth()
-    const { updatePropertyOptimistically } = useProperties()
+    const { selectedExpense, setSelectedExpense, updatePropertyOptimistically } = useProperties()
 
     const handleDelete = async () => {
-        if (!expense) return
+        if (!selectedExpense) return
         try {
-            await deletePropertyExpense(currentUser.id, property.id, expense.id)
+            await deletePropertyExpense(currentUser.id, property.id, selectedExpense.id)
             toast.success('Expense deleted successfully')
-            updatePropertyOptimistically({...property, expenses: property.expenses?.filter(exp => exp.id !== expense.id)})
+            updatePropertyOptimistically({...property, expenses: property.expenses?.filter(exp => exp.id !== selectedExpense.id)})
             setOpenDeleteDialog(false)
             onClose()
         } catch (error) {
@@ -32,20 +32,20 @@ const ExpenseDetails = ({ expense, onClose, property }: { expense: Expense | nul
     }
 
     return (
-        <div className={`expense-details-container-wrap ${!expense && 'collapsed'}`}>
+        <div className={`expense-details-container-wrap ${!selectedExpense && 'collapsed'}`}>
             <div className="expense-details-container">
                 <div className="flex items-center justify-between font-medium text-[16px]">
                     Expense details
                     <div className="icon-box-close"><Xmark color='#404040' onClick={onClose}/></div>
                 </div>
-                {expense && (
+                {selectedExpense && (
                     <div className="mt-4 px-4 py-3 border rounded-lg flex flex-col relative">
-                        <div className="text-[18px] font-medium">{expense.title}</div>
-                        <div className="text-[14px] text-[#606060] font-semibold">{expense.amount.currency.symbol} {expense.amount.amount} · {expense.frequency.frequency}</div>
+                        <div className="text-[18px] font-medium">{selectedExpense.title}</div>
+                        <div className="text-[14px] text-[#606060] font-semibold">{selectedExpense.amount.currency.symbol} {selectedExpense.amount.amount} · {selectedExpense.frequency.frequency}</div>
                         <div className="text-[12px] mt-4 text-[#606060]">Date of Index</div>
-                        <div className="font-medium">{formatDate(expense.indexDate.toString())}</div>
+                        <div className="font-medium">{formatDate(selectedExpense.indexDate.toString())}</div>
                         <div className="text-[12px] mt-3 text-[#606060]">Description</div>
-                        <div className="font-medium text-[14px] text-[#404040]">{expense.description}</div>
+                        <div className="font-medium text-[14px] text-[#404040]">{selectedExpense.description}</div>
                         <div className="flex flex-col gap-2 absolute top-2 right-2">
                             <div className="square-button" onClick={() => setOpenEditDialog(true)}>
                                 <Edit color='#404040' width={16} height={16}/>
@@ -60,8 +60,8 @@ const ExpenseDetails = ({ expense, onClose, property }: { expense: Expense | nul
                 )}
                 <div className="flex flex-col mt-4 rounded-lg bg-[#fafafa] p-3 gap-3">
                     <div className="text-[#404040] font-semibold">Payment History</div>
-                    {expense && (() => {
-                        const sortedHistory = [...expense.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    {selectedExpense && (() => {
+                        const sortedHistory = [...selectedExpense.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                         const futurePayments = sortedHistory.filter(payment => new Date(payment.date) > new Date()).reverse()
                         const pastPayments = sortedHistory.filter(payment => new Date(payment.date) <= new Date())
                         const paymentsToShow = [...futurePayments.slice(0, 1), ...pastPayments]
@@ -78,15 +78,16 @@ const ExpenseDetails = ({ expense, onClose, property }: { expense: Expense | nul
                                     completed={payment.completed}
                                     isFuture={isFuture}
                                     propertyId={property.id}
-                                    expenseId={expense.id}
+                                    expense={selectedExpense}
                                     payment={payment}
+                                    updateExpense={updateExpense}
                                 />
                             )
                         })
                     })()}
                 </div>
             </div>
-            {openEditDialog && expense && <EditExpenseDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} expense={expense} propertyId={property.id} />}
+            {openEditDialog && selectedExpense && <EditExpenseDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} propertyId={property.id} />}
             {openDeleteDialog && <DeleteExpenseDialog isOpen={openDeleteDialog} close={() => setOpenDeleteDialog(false)} onDelete={handleDelete} />}
         </div>
     )

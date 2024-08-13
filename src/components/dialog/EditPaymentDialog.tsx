@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
-import { ExpensePayment, Currency } from 'src/types/property'
+import { ExpensePayment, Currency, Expense, Property } from 'src/types/property'
 import CurrencyInput from '../common/CurrencyInput/CurrencyInput'
 import Button from '../common/Button/Button'
 import { updateExpensePayment } from 'src/services/firestoreService'
 import { useAuth } from 'src/contexts/AuthContext'
-import { useProperties } from 'src/contexts/PropertiesContext'
 import { toast } from 'react-toastify'
 import { Xmark } from 'iconoir-react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import './dialogStyles.scss'
+import { useProperties } from 'src/contexts/PropertiesContext'
 
-const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expenseId }: { isOpen: boolean, close: () => void, payment: ExpensePayment, propertyId: string, expenseId: string }) => {
+const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expense, updateExpense }: { isOpen: boolean, close: () => void, payment: ExpensePayment, propertyId: string, expense: Expense, updateExpense: () => void }) => {
   const { currentUser } = useAuth()
-  const { updateExpenseOptimistically } = useProperties()
   const [currencySymbol, setCurrencySymbol] = useState<Currency>(payment.amount.currency)
   const [completed, setCompleted] = useState(payment.completed)
   const [loading, setLoading] = useState(false)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ExpensePayment>()
+  const { updateExpenseOptimistically } = useProperties()
   useEffect(() => {
     if (payment) {
       reset(payment)
@@ -29,8 +29,17 @@ const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expenseId }: { 
     setLoading(true)
     const updatedPayment = { ...payment, amount: { amount: data.amount?.amount, currency: currencySymbol }, completed }
     try {
-      await updateExpensePayment(currentUser.id, propertyId, expenseId, updatedPayment)
+      await updateExpensePayment(currentUser.id, propertyId, expense.id, updatedPayment)
+      const updatedExpense = {
+        ...expense,
+        history: expense.history.map((payment) =>
+          payment.id === updatedPayment.id ? updatedPayment : payment
+        )
+      }
+      updateExpenseOptimistically(propertyId, updatedExpense)
+      updateExpense()
       toast.success('Payment updated successfully')
+
       close()
     } catch (error) {
       console.error('Error updating payment', error)

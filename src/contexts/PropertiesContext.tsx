@@ -5,6 +5,8 @@ import { useAuth } from 'src/contexts/AuthContext'
 
 interface PropertiesContextType {
   properties: Property[]
+  selectedExpense: Expense | null
+  setSelectedExpense: (expense: Expense | null) => void
   loading: boolean
   fetchProperties: () => void
   addPropertyOptimistically: (property: Property) => void
@@ -26,6 +28,7 @@ export const useProperties = () => {
 export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchProperties = async () => {
@@ -78,7 +81,7 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
   }, [currentUser])
 
   return (
-    <PropertiesContext.Provider value={{ properties, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically, addExpenseOptimistically, updateExpenseOptimistically }}>
+    <PropertiesContext.Provider value={{ properties, selectedExpense, setSelectedExpense, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically, addExpenseOptimistically, updateExpenseOptimistically }}>
       {children}
     </PropertiesContext.Provider>
   )

@@ -1,10 +1,9 @@
 import './paymentCardStyles.scss'
-
 import { useState } from 'react'
 import EditPaymentDialog from '../dialog/EditPaymentDialog'
-import { ExpensePayment } from 'src/types/property'
+import { Expense, ExpensePayment } from 'src/types/property'
 
-const PaymentCard: React.FC<PaymentCardProps> = ({ date, reference, symbol, amount, completed, isFuture, propertyId, expenseId, payment }) => {
+const PaymentCard: React.FC<PaymentCardProps> = ({ date, reference, symbol, amount, completed, isFuture, propertyId, expense, payment, updateExpense }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
@@ -17,7 +16,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ date, reference, symbol, amou
       <div className={`payment-status ${completed ? 'completed' : isFuture ? 'upcoming' : 'pending'}`} onClick={() => setIsModalOpen(true)}>
         {completed ? 'Completed' : isFuture ? 'Upcoming' : 'Pending'}
       </div>
-      <EditPaymentDialog isOpen={isModalOpen} close={() => setIsModalOpen(false)} payment={payment} propertyId={propertyId} expenseId={expenseId} />
+      <EditPaymentDialog isOpen={isModalOpen} updateExpense={updateExpense} close={() => setIsModalOpen(false)} payment={payment} propertyId={propertyId} expense={expense} />
     </div>
   )
 }
@@ -30,8 +29,9 @@ interface PaymentCardProps {
   completed: boolean
   isFuture: boolean
   propertyId: string
-  expenseId: string
+  expense: Expense
   payment: ExpensePayment
+  updateExpense: () => void
 }
 
 export default PaymentCard

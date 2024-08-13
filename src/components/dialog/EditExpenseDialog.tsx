@@ -10,21 +10,21 @@ import { useProperties } from 'src/contexts/PropertiesContext'
 import { toast } from 'react-toastify'
 import Button from '../common/Button/Button'
 
-const EditExpenseDialog = ({ isOpen, close, expense, propertyId }: EditExpenseDialogProps) => {
+const EditExpenseDialog = ({ isOpen, close, propertyId }: EditExpenseDialogProps) => {
     const { currentUser } = useAuth()
+    const { selectedExpense, setSelectedExpense, updateExpenseOptimistically } = useProperties()
     const { register, handleSubmit, formState: { errors }, reset } = useForm<Expense>()
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
     const [frequency, setFrequency] = useState<Frequency>({ frequency: 'Monthly', value: 1, unit: 'm' })
     const [loading, setLoading] = useState(false)
-    const { updateExpenseOptimistically } = useProperties()
 
     useEffect(() => {
-        if (expense) {
-            reset(expense)
-            setCurrencySymbol(expense.amount.currency)
-            setFrequency(expense.frequency)
+        if (selectedExpense) {
+            reset(selectedExpense)
+            setCurrencySymbol(selectedExpense.amount.currency)
+            setFrequency(selectedExpense.frequency)
         }
-    }, [expense, reset])
+    }, [selectedExpense, reset])
 
     const onSubmit: SubmitHandler<Expense> = data => {
         setLoading(true)
@@ -62,7 +62,6 @@ const EditExpenseDialog = ({ isOpen, close, expense, propertyId }: EditExpenseDi
 interface EditExpenseDialogProps {
     isOpen: boolean
     close: () => void
-    expense: Expense
     propertyId: string
 }
 

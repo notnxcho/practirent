@@ -1,14 +1,19 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Expense, Property } from 'src/types/property'
 import './propertyExpensesTabStyles.scss'
 import PropertyExpenseCard from './PropertyExpenseCard'
 import Button from '../common/Button/Button'
 import AddExpenseDialog from '../dialog/AddExpenseDialog'
 import ExpenseDetails from './ExpenseDetails'
+import { useProperties } from 'src/contexts/PropertiesContext'
 
 const PropertyExpensesTab = ({property}: {property: Property}) => {
     const [openDialog, setOpenDialog] = useState<boolean>(false)
-    const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
+    const { selectedExpense, setSelectedExpense } = useProperties()
+
+    useEffect(() => {
+        setSelectedExpense(selectedExpense)
+    }, [property])
 
     const toggleOpenDialog = () => {
         setOpenDialog(!openDialog)
@@ -33,7 +38,7 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
                 </div>
                 {openDialog && <AddExpenseDialog isOpen={openDialog} close={toggleOpenDialog} propertyId={property.id} />}
             </div>
-            <ExpenseDetails expense={selectedExpense} property={property} onClose={() => setSelectedExpense(null)} />
+            <ExpenseDetails updateExpense={()=>{setSelectedExpense(selectedExpense)}} property={property} onClose={() => setSelectedExpense(null)} />
         </div>
     )
 }
