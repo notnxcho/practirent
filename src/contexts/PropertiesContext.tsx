@@ -1,18 +1,22 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { getUserProperties } from 'src/services/firestoreService'
-import { Expense, Property } from 'src/types/property'
+import { Expense, Income, Property } from 'src/types/property'
 import { useAuth } from 'src/contexts/AuthContext'
 
 interface PropertiesContextType {
   properties: Property[]
   selectedExpense: Expense | null
   setSelectedExpense: (expense: Expense | null) => void
+  selectedIncome: Income | null
+  setSelectedIncome: (income: Income | null) => void
   loading: boolean
   fetchProperties: () => void
   addPropertyOptimistically: (property: Property) => void
   updatePropertyOptimistically: (updatedProperty: Property) => void
   addExpenseOptimistically: (propertyId: string, expense: Expense) => void
   updateExpenseOptimistically: (propertyId: string, updatedExpense: Expense) => void
+  addIncomeOptimistically: (propertyId: string, income: Income) => void
+  updateIncomeOptimistically: (propertyId: string, updatedIncome: Income) => void
 }
 
 const PropertiesContext = createContext<PropertiesContextType | undefined>(undefined)
@@ -29,6 +33,7 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
   const { currentUser } = useAuth()
   const [properties, setProperties] = useState<Property[]>([])
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
+  const [selectedIncome, setSelectedIncome] = useState<Income | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchProperties = async () => {
@@ -60,6 +65,15 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
       )
     )
   }
+  const addIncomeOptimistically = (propertyId: string, income: Income) => {
+    setProperties(prevProperties =>
+      prevProperties.map(prop =>
+        prop.id === propertyId
+          ? { ...prop, incomes: [...(prop.incomes || []), income] }
+          : prop
+      )
+    )
+  }
 
   const updateExpenseOptimistically = (propertyId: string, updatedExpense: Expense) => {
     setProperties(prevProperties =>
@@ -75,13 +89,42 @@ export const PropertiesProvider = ({ children }: { children: ReactNode }) => {
       )
     )
   }
+  const updateIncomeOptimistically = (propertyId: string, updatedIncome: Income) => {
+    setProperties(prevProperties =>
+      prevProperties.map(prop =>
+        prop.id === propertyId
+          ? {
+              ...prop,
+              incomes: prop.incomes?.map(inc =>
+                inc.id === updatedIncome.id ? updatedIncome : inc
+              )
+            }
+          : prop
+      )
+    )
+  }
 
   useEffect(() => {
     fetchProperties()
   }, [currentUser])
 
   return (
-    <PropertiesContext.Provider value={{ properties, selectedExpense, setSelectedExpense, loading, fetchProperties, addPropertyOptimistically, updatePropertyOptimistically, addExpenseOptimistically, updateExpenseOptimistically }}>
+    <PropertiesContext.Provider 
+      value={{ 
+        properties, 
+        selectedExpense, 
+        setSelectedExpense, 
+        selectedIncome, 
+        setSelectedIncome, 
+        loading, 
+        fetchProperties, 
+        addPropertyOptimistically, 
+        updatePropertyOptimistically, 
+        addExpenseOptimistically, 
+        updateExpenseOptimistically,
+        addIncomeOptimistically,
+        updateIncomeOptimistically
+      }}>
       {children}
     </PropertiesContext.Provider>
   )

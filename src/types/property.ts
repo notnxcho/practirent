@@ -5,7 +5,7 @@ export type Property = {
     marketValue?: MonetaryAmount,
     image?: string[],
     padron?: string,
-    income?: Income[],
+    incomes?: Income[],
     tenant?: Tenant,
     expenses?: Expense[],
     address: Address,
@@ -33,12 +33,7 @@ export type Income = {
     history: IncomePayment[]
 }
 
-export type IncomePayment = {
-    id: string,
-    amount: MonetaryAmount,
-    date: Date,
-    reference: string,
-}
+export type IncomePayment = EntryPayment
 
 export type Tenant = {
     name: string,
@@ -79,7 +74,9 @@ export type Expense = {
     history: ExpensePayment[]
 }
 
-export type ExpensePayment = {
+export type ExpensePayment = EntryPayment
+
+export type EntryPayment = {
     id: string,
     amount: MonetaryAmount,
     date: Date | string,

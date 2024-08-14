@@ -8,8 +8,8 @@
     background-color: #fcfcfc;
     flex-shrink: 1;
     flex-basis: 40%;
-    min-width: max-content;
-    max-width: 600px;
+    flex-grow: 1;
+    min-width: fit-content;
     .address-item {
         display: flex;
         flex-direction: column;

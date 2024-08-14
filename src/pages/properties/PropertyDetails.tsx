@@ -5,9 +5,10 @@ import { Property } from '../../types/property'
 import { getUserProperties } from '../../services/firestoreService'
 import { useAuth } from 'src/contexts/AuthContext'
 import PropertyLayout from '../layout/PropertyLayout'
-import AddressWidget from 'src/components/addressWidget/AddressWidget'
 import PropertyExpensesTab from 'src/components/propertyExpensesTab/PropertyExpensesTab'
 import { useProperties } from 'src/contexts/PropertiesContext'
+import PropertyIncomesTab from 'src/components/propertyIncomesTab/PropertyIncomesTab'
+import PropertyOverviewTab from 'src/components/propertyOverviewTab/PropertyOverviewTab'
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>()
@@ -40,11 +41,8 @@ const PropertyDetails = () => {
     <PropertyLayout property={property} tabs={tabs} setTabs={setTabs} onUpdateProperty={handleUpdateProperty}>
       {!property ? <div>Loading...</div> : (  
       <div className="layout-content-container" style={{marginTop: 0}}>
-        { tabs[0].active && <div className='flex p-6'>
-          <AddressWidget address={property.address} />
-          </div>
-          }
-        { tabs[1].active && <div>Income</div>}
+        { tabs[0].active && <PropertyOverviewTab property={property}/>}
+        { tabs[1].active && <PropertyIncomesTab property={property}/>}
         { tabs[2].active && <PropertyExpensesTab property={property}/>}
 
         </div>

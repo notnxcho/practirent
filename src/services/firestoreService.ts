@@ -1,7 +1,7 @@
 import { collection, addDoc, getDoc, doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { firestoreDB } from "../firebase";
 import { User } from "../types/user";
-import { Expense, ExpensePayment, Property } from "src/types/property";
+import { Expense, ExpensePayment, Income, IncomePayment, Property } from "src/types/property";
 
 export const addUserDocument = async (user: User) => {
     try {
@@ -189,4 +189,104 @@ export const updateExpensePayment = async (userId: string, propertyId: string, e
   } else {
     throw new Error("User document does not exist")
   }
+}
+
+
+export const addPropertyIncome = async (userId: string, propertyId: string, income: Income) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const updatedIncomes = [...(property.incomes || []), income]
+            properties[propertyIndex] = { ...property, incomes: updatedIncomes }
+            await updateDoc(userRef, { properties })
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}
+
+export const deletePropertyIncome = async (userId: string, propertyId: string, incomeId: string) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const updatedIncomes = property.incomes.filter((inc: Income) => inc.id !== incomeId)
+            properties[propertyIndex] = { ...property, incomes: updatedIncomes }
+            await updateDoc(userRef, { properties })
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}
+
+export const updatePropertyIncome = async (userId: string, propertyId: string, updatedIncome: Income) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const incomeIndex = property.incomes.findIndex((inc: Income) => inc.id === updatedIncome.id)
+            if (incomeIndex !== -1) {
+                property.incomes[incomeIndex] = updatedIncome
+                properties[propertyIndex] = property
+                await updateDoc(userRef, { properties })
+            } else {
+                throw new Error("Income not found")
+            }
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}
+
+export const updateIncomePayment = async (userId: string, propertyId: string, incomeId: string, updatedPayment: IncomePayment) => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const incomeIndex = property.incomes.findIndex((inc: Income) => inc.id === incomeId)
+            if (incomeIndex !== -1) {
+                const income = property.incomes[incomeIndex]
+                const paymentIndex = income.history.findIndex((pay: IncomePayment) => pay.id === updatedPayment.id)
+                if (paymentIndex !== -1) {
+                    income.history[paymentIndex] = updatedPayment
+                    property.incomes[incomeIndex] = income
+                    properties[propertyIndex] = property
+                    await updateDoc(userRef, { properties })
+                } else {
+                    throw new Error("Payment not found")
+                }
+            } else { 
+                throw new Error("Income not found") 
+            }
+        } else { 
+            throw new Error("Property not found") 
+        }
+    } else { 
+        throw new Error("User document does not exist") 
+    }
 }

@@ -6,6 +6,15 @@
     background-color: #fff;
     border: 1px solid #e1e1e1;
     cursor: pointer;
+    min-height: 200px;
+    &.shimmer {
+        background: linear-gradient(to right, #fcfcfc 0%, #f0f0f0 50%, #fcfcfc 100%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+        border: none;
+        box-shadow: none !important;
+        cursor: default;
+    }
     &:hover {
         box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.04);
     }

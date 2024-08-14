@@ -1,22 +1,14 @@
-import { useState, useEffect } from 'react'
-import { ExpensePayment, Currency, Expense, Property } from 'src/types/property'
+import { useEffect } from 'react'
+import { Currency, Expense, EntryPayment, Income } from 'src/types/property'
 import CurrencyInput from '../common/CurrencyInput/CurrencyInput'
 import Button from '../common/Button/Button'
-import { updateExpensePayment } from 'src/services/firestoreService'
-import { useAuth } from 'src/contexts/AuthContext'
-import { toast } from 'react-toastify'
 import { Xmark } from 'iconoir-react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import './dialogStyles.scss'
-import { useProperties } from 'src/contexts/PropertiesContext'
 
-const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expense, updateExpense }: { isOpen: boolean, close: () => void, payment: ExpensePayment, propertyId: string, expense: Expense, updateExpense: () => void }) => {
-  const { currentUser } = useAuth()
-  const [currencySymbol, setCurrencySymbol] = useState<Currency>(payment.amount.currency)
-  const [completed, setCompleted] = useState(payment.completed)
-  const [loading, setLoading] = useState(false)
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ExpensePayment>()
-  const { updateExpenseOptimistically } = useProperties()
+const EditPaymentDialog = ({ isOpen, close, loading, payment, currencySymbol, setCurrencySymbol, completed, setCompleted, propertyId, entry, updateEntry, onSubmit }: EditPaymentDialogProps) => {
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<EntryPayment>()
+
   useEffect(() => {
     if (payment) {
       reset(payment)
@@ -24,30 +16,6 @@ const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expense, update
       setCompleted(payment.completed)
     }
   }, [payment])
-
-  const onSubmit: SubmitHandler<ExpensePayment> = async (data) => {
-    setLoading(true)
-    const updatedPayment = { ...payment, amount: { amount: data.amount?.amount, currency: currencySymbol }, completed }
-    try {
-      await updateExpensePayment(currentUser.id, propertyId, expense.id, updatedPayment)
-      const updatedExpense = {
-        ...expense,
-        history: expense.history.map((payment) =>
-          payment.id === updatedPayment.id ? updatedPayment : payment
-        )
-      }
-      updateExpenseOptimistically(propertyId, updatedExpense)
-      updateExpense()
-      toast.success('Payment updated successfully')
-
-      close()
-    } catch (error) {
-      console.error('Error updating payment', error)
-      toast.error('Failed to update payment')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     isOpen ? (
@@ -59,29 +27,44 @@ const EditPaymentDialog = ({ isOpen, close, payment, propertyId, expense, update
                     <Xmark color="#404040"/>
                 </div>
             </div>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="form-container">
-                        <div className='input-wrap'>
-                            <label htmlFor="amount" className="label">Amount</label>
-                            <CurrencyInput passId="amount" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                        </div>
-                        <div className='input-wrap'>
-                            <label htmlFor="completed" className="label">Completed</label>
-                            <select id="completed" value={completed ? 'true' : 'false'} onChange={(e) => setCompleted(e.target.value === 'true')} className="input">
-                                <option value="true">Completed</option>
-                                <option value="false">Pending</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="flex w-full justify-end gap-2">
-                        <Button variant='secondary' onClick={close}>Cancel</Button>
-                        <Button variant='primary' type='submit' loading={loading}>Save</Button>
-                    </div>
-                </form>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-container">
+                  <div className='input-wrap'>
+                    <label htmlFor="amount" className="label">Amount</label>
+                    <CurrencyInput passId="amount" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
+                  </div>
+                  <div className='input-wrap'>
+                    <label htmlFor="completed" className="label">Completed</label>
+                    <select id="completed" value={completed ? 'true' : 'false'} onChange={(e) => setCompleted(e.target.value === 'true')} className="input">
+                      <option value="true">Completed</option>
+                      <option value="false">Pending</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex w-full justify-end gap-2 mt-4">
+                  <Button variant='secondary' onClick={close}>Cancel</Button>
+                  <Button variant='primary' type='submit' loading={loading}>Save</Button>
+                </div>
+              </form>
             </div>
         </div>
     ) : null
   )
+}
+
+interface EditPaymentDialogProps {
+  isOpen: boolean
+  close: () => void
+  loading: boolean
+  payment: EntryPayment | undefined
+  currencySymbol: Currency
+  setCurrencySymbol: (currency: Currency) => void
+  completed: boolean
+  setCompleted: (completed: boolean) => void
+  propertyId: string
+  entry: Expense | Income
+  updateEntry: () => void
+  onSubmit: (data: EntryPayment) => void
 }
 
 export default EditPaymentDialog

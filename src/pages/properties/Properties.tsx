@@ -27,14 +27,18 @@ const Properties = () => {
           </div>
         </div>
         <div className="properties-grid">
-          {loading ? 
-            <div>Loading...</div> : 
-            properties.map(
-              (prop: Property, index: number) => {
-                return <PropertyCard property={prop} key={prop.id}/>
-              }
-            )
-          }
+          {properties.map(
+            (prop: Property, index: number) => {
+              return <PropertyCard property={prop} key={prop.id}/>
+            }
+          )}
+          {loading && (
+            <>
+              <div className="property-card-container shimmer"></div>
+              <div className="property-card-container shimmer"></div>
+              <div className="property-card-container shimmer"></div>
+            </>
+          )}
         </div>
       </div>
     </Layout>
