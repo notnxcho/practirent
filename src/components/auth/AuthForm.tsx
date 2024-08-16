@@ -9,6 +9,7 @@ import Button from '../common/Button/Button'
 import { XmarkCircle } from 'iconoir-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import Logo from '../../assets/practirent-iso.png'
 
 const AuthForm = ({type}: {type: 'signup' | 'login'}) => {
 
@@ -50,8 +51,9 @@ const AuthForm = ({type}: {type: 'signup' | 'login'}) => {
 
     return (
         <div className="auth-container">
-            <form onSubmit={handleSubmit(onSubmit as any)} className="w-full form-container">
-                <div className="flex flex-col gap-3 mb-3">
+            <div className='flex align-center justify-center mb-3'><img src={Logo} alt='logo' width={120} height={120}/></div>
+                <form onSubmit={handleSubmit(onSubmit as any)} className="w-full form-container">
+                    <div className="flex flex-col gap-3 mb-3">
                     <div className='text-4xl font-semibold leading-[140%]'>{error.message ? 'Oops...' : type === 'signup' ? "Let's get you started" : 'Welcome back!'}</div>
                     {error.message && <p className='flex items-center px-3 py-2 bg-[#f8f8f8] rounded gap-2 text-red-500 text-[14px] font-medium leading-[160%]'><XmarkCircle width={20} height={20} color='#FF4444'/>{error.message}</p>}
                 </div>
