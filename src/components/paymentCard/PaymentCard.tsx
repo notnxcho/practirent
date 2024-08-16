@@ -9,7 +9,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ date, reference, symbol, amou
         <div className="payment-reference">{reference}</div>
         <div className="payment-amount">{symbol} {amount}</div>
       </div>
-      <div className={`payment-status ${completed ? 'completed' : isFuture ? 'upcoming' : 'pending'}`} onClick={onClick}>
+      <div className={`payment-status ${completed ? 'completed' : isFuture ? 'upcoming' : 'pending'}`} onClick={() => !isFuture && onClick()}>
         {completed ? 'Completed' : isFuture ? 'Upcoming' : 'Pending'}
       </div>
     </div>

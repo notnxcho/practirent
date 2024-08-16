@@ -3,15 +3,10 @@ import './propertyExpensesTabStyles.scss'
 import { formatDate } from 'src/utils'
 
 const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, selected: boolean, onSelect: () => void}) => {
-
-    const renderUpcomingPayments = () => {
-        const upcomingPayments = expense.history.filter(payment => !payment.completed)
-        const currentDate = new Date().toISOString().split('T')[0]
-
-        // Case 1: Multiple not completed payments dated previous to this date
-        const previousIncompletePayments = upcomingPayments.filter(payment => new Date(payment.date) < new Date(currentDate))
-        if (previousIncompletePayments.length > 1) {
-            const currencySums = previousIncompletePayments.reduce((acc: any, payment) => {
+    const renderPaymentHistoryOverview = () => {
+        const incompletePayments = expense.history.filter(payment => !payment.completed)
+        if (incompletePayments.length > 1) {
+            const currencySums = incompletePayments.reduce((acc: any, payment: ExpensePayment) => {
                 const currency = payment.amount.currency.symbol
                 if (!acc[currency]) {
                     acc[currency] = 0
@@ -23,7 +18,7 @@ const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, s
                 <div className='flex items-center w-full justify-between gap-6'>
                     <div className='flex items-center gap-3'>
                         <div className="pulsating-indicator alert"/>
-                        {previousIncompletePayments.length} due payments
+                        {incompletePayments.length} due payments
                     </div>
                     <div className="flex shrink-0 w-max flex-col">
                         {Object.entries(currencySums).map(([currency, sum]: any) => (
@@ -35,42 +30,26 @@ const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, s
                     </div>
                 </div>
             )
-        }
-
-        // Case 2: Last payment not completed dated previous to current date
-        if (previousIncompletePayments.length === 1) {
+        } else if (incompletePayments.length === 1) {
             return (
                 <div className='flex items-center w-full justify-between gap-6'>
                     <div className='flex items-center gap-3'>
                         <div className="pulsating-indicator warning"/>
-                        <div className="flex flex-col gap-0.5">
-                            <div className="text-[12px] text-[#606060]">{formatDate(previousIncompletePayments[0].date.toLocaleString())}</div>
-                            {previousIncompletePayments[0].reference}
-                        </div>
+                        {incompletePayments[0].reference}
                     </div>
-                    <div className="flex items-center shrink-0">{previousIncompletePayments[0].amount.currency.symbol} {previousIncompletePayments[0].amount.amount}</div>
+                    <div className="flex items-center shrink-0">{incompletePayments[0].amount.currency.symbol} {incompletePayments[0].amount.amount}</div>
                 </div>
             )
-        }
-
-        // Case 3: All payments completed to date, only display the upcoming payment
-        const nextPayment = upcomingPayments.find(payment => new Date(payment.date) >= new Date(currentDate))
-        if (nextPayment) {
+        } else {
             return (
                 <div className='flex items-center w-full justify-between gap-6'>
                     <div className='flex items-center gap-3'>
                         <div className="pulsating-indicator valid"/>
-                        <div className="flex flex-col gap-0.5">
-                            <div className="text-[12px] color-[#606060]">{nextPayment.date.toLocaleString()}</div>
-                            {nextPayment.reference}
-                        </div>
+                        All payments completed
                     </div>
-                    <div className="flex items-center shrink-0">{nextPayment.amount.currency.symbol} {nextPayment.amount.amount}</div>
                 </div>
             )
         }
-
-        return null
     }
 
     return (
@@ -78,7 +57,7 @@ const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, s
             <div className='desc'>{expense.title}</div>
             <div className='amount'>{expense.amount.currency.symbol} {expense.amount.amount} · {expense.frequency.frequency}</div>
             <div className="upcoming-box">
-                {renderUpcomingPayments()}
+                {renderPaymentHistoryOverview()}
             </div>
         </div>
     )

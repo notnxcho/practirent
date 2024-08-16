@@ -12,6 +12,7 @@ import { toast } from 'react-toastify'
 import { doc, collection } from 'firebase/firestore'
 import { firestoreDB } from '../../firebase'
 import Button from '../common/Button/Button'
+import { formatDate } from 'src/utils'
 
 const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
     const { currentUser } = useAuth()
@@ -20,6 +21,7 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
     const [frequency, setFrequency] = useState<Frequency>({ frequency: 'Monthly', value: 1, unit: 'm' })
     const [loading, setLoading] = useState(false)
     const { addIncomeOptimistically } = useProperties()
+    const [instanceAsCompleted, setInstanceAsCompleted] = useState<boolean>(true)
 
     const calculateThreePreviousPayments = (data: Income) => {
         const payments = []
@@ -52,6 +54,27 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
         return payments.reverse()
     }
 
+    const calculateAllPaymentsToDate = (data: Income) => {
+        const payments = []
+        const today = new Date()
+        let currentDate = new Date(data.indexDate)
+
+        // Calculate past payments
+        while (currentDate <= today) {
+            payments.push({
+                id: doc(collection(firestoreDB, 'expenses')).id,
+                amount: { amount: data.amount?.amount, currency: currencySymbol },
+                date: currentDate.toISOString().split('T')[0],
+                reference: data.title + ' Payment ' + formatDate(currentDate.toISOString().split('T')[0]).split(' ').splice(1,2).join(' '),
+                completed: instanceAsCompleted
+            })
+            currentDate = frequency.unit === 'm'
+                ? new Date(currentDate.setMonth(currentDate.getMonth() + frequency.value))
+                : new Date(currentDate.setFullYear(currentDate.getFullYear() + frequency.value))
+        }
+        return payments
+    }
+
     const onSubmit: SubmitHandler<Income> = data => {
         setLoading(true)
         let updateIncome = {
@@ -59,7 +82,7 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
             id: doc(collection(firestoreDB, 'incomes')).id,
             amount: { amount: data.amount?.amount, currency: currencySymbol },
             frequency: frequency,
-            history: [...calculateThreePreviousPayments(data), ...calculateThreeNextPayments(data)]
+            history: calculateAllPaymentsToDate(data)
         }
         console.log('data del form', updateIncome)
         addPropertyIncome(currentUser.id, propertyId, updateIncome).then(() => {
@@ -91,6 +114,9 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
                         setCurrencySymbol={setCurrencySymbol}
                         frequency={frequency}
                         setFrequency={setFrequency} 
+                        instanceAsCompleted={instanceAsCompleted}
+                        setInstanceAsCompleted={setInstanceAsCompleted}
+                        type='add'
                     />
                     <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Add Income</Button>
                 </form>

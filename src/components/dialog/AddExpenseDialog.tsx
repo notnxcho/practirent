@@ -12,12 +12,14 @@ import { toast } from 'react-toastify'
 import { doc, collection } from 'firebase/firestore'
 import { firestoreDB } from '../../firebase'
 import Button from '../common/Button/Button'
+import { formatDate } from 'src/utils'
 
 const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
     const { currentUser } = useAuth()
     const { register, handleSubmit, formState: { errors } } = useForm<Expense>()
     const [currencySymbol, setCurrencySymbol] = useState<Currency>({ currency: 'usd', symbol: 'USD' })
     const [frequency, setFrequency] = useState<Frequency>({ frequency: 'Monthly', value: 1, unit: 'm' })
+    const [instanceAsCompleted, setInstanceAsCompleted] = useState<boolean>(false)
     const [loading, setLoading] = useState(false)
     const { addExpenseOptimistically } = useProperties()
 
@@ -52,6 +54,29 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
         return payments.reverse()
     }
 
+    const calculateAllPaymentsToDate = (data: Expense) => {
+        const payments = []
+        const today = new Date()
+        let currentDate = new Date(data.indexDate)
+
+        console.log(data, 'thedadttata', frequency)
+
+        // Calculate past payments
+        while (currentDate <= today) {
+            payments.push({
+                id: doc(collection(firestoreDB, 'expenses')).id,
+                amount: { amount: data.amount?.amount, currency: currencySymbol },
+                date: currentDate.toISOString().split('T')[0],
+                reference: data.title + ' Payment ' + formatDate(currentDate.toISOString().split('T')[0]).split(' ').splice(1,2).join(' '),
+                completed: instanceAsCompleted
+            })
+            currentDate = frequency.unit === 'm'
+                ? new Date(currentDate.setMonth(currentDate.getMonth() + frequency.value))
+                : new Date(currentDate.setFullYear(currentDate.getFullYear() + frequency.value))
+        }
+        return payments
+    }
+
     const onSubmit: SubmitHandler<Expense> = data => {
         setLoading(true)
         let updateExpense = {
@@ -59,7 +84,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
             id: doc(collection(firestoreDB, 'expenses')).id,
             amount: { amount: data.amount?.amount, currency: currencySymbol },
             frequency: frequency,
-            history: [...calculateThreePreviousPayments(data), ...calculateThreeNextPayments(data)]
+            history: calculateAllPaymentsToDate(data)
         }
         console.log('data del form', updateExpense)
         addPropertyExpense(currentUser.id, propertyId, updateExpense).then(() => {
@@ -90,7 +115,10 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                         currencySymbol={currencySymbol}
                         setCurrencySymbol={setCurrencySymbol}
                         frequency={frequency}
-                        setFrequency={setFrequency} 
+                        setFrequency={setFrequency}
+                        instanceAsCompleted={instanceAsCompleted}
+                        setInstanceAsCompleted={setInstanceAsCompleted}
+                        type='add'
                     />
                     <Button type='submit' loading={loading} fullWidth size='large' disabled={loading} className='mt-4'>Add Expense</Button>
                 </form>

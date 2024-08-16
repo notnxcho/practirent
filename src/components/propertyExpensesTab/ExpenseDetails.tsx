@@ -45,6 +45,26 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
         }
     }
 
+    const calculateUpcomingPayment = (expense: Expense) => {
+        const today = new Date()
+        let currentDate = new Date(expense.indexDate)
+
+
+        // Calculate past payments
+        while (currentDate <= today) {
+            currentDate = expense.frequency.unit === 'm'
+                ? new Date(currentDate.setMonth(currentDate.getMonth() + expense.frequency.value))
+                : new Date(currentDate.setFullYear(currentDate.getFullYear() + expense.frequency.value))
+        }
+        return {
+            id: 'upcoming',
+            amount: expense.amount,
+            date: currentDate.toISOString().split('T')[0],
+            reference: 'Upcoming Payment',
+            completed: false
+        }
+    }
+
     const onSubmit: SubmitHandler<ExpensePayment> = async (data) => {
         setLoading(true)
         const updatedPayment = { ...payment, amount: { amount: data.amount?.amount, currency: payment?.amount.currency ?? { symbol: "USD", currency: "usd" } }, id: payment?.id ?? '', completed, date: payment?.date ?? new Date().toISOString(), reference: data.reference }
@@ -107,11 +127,11 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                     <div className="text-[#404040] font-semibold">Payment History</div>
                     {selectedExpense && (() => {
                         const sortedHistory = [...selectedExpense.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                        const futurePayments = sortedHistory.filter(payment => new Date(payment.date) > new Date()).reverse()
-                        const pastPayments = sortedHistory.filter(payment => new Date(payment.date) <= new Date())
-                        const paymentsToShow = [...futurePayments.slice(0, 1), ...pastPayments]
+                        // const futurePayments = sortedHistory.filter(payment => new Date(payment.date) > new Date()).reverse()
+                        // const pastPayments = sortedHistory.filter(payment => new Date(payment.date) <= new Date())
+                        // const paymentsToShow = [...futurePayments.slice(0, 1), ...pastPayments]
 
-                        return paymentsToShow.map((payment: ExpensePayment) => {
+                        return [calculateUpcomingPayment(selectedExpense), ...sortedHistory].map((payment: ExpensePayment) => {
                             const isFuture = new Date(payment.date) > new Date()
                             return (
                                 <PaymentCard

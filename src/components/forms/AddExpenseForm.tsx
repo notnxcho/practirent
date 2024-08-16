@@ -2,7 +2,7 @@ import './formStyles.scss'
 import CurrencyInput from '../common/CurrencyInput/CurrencyInput'
 import { Frequency } from 'src/types/property'
 
-const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, frequency, setFrequency}: any) => {
+const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, frequency, setFrequency, instanceAsCompleted, setInstanceAsCompleted, type}: any) => {
     const frequencies: Frequency[] = [
         {frequency: 'Monthly', value: 1, unit: 'm'},
         {frequency: 'Quarterly', value: 3, unit: 'm'},
@@ -37,17 +37,42 @@ const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, fr
                 <CurrencyInput passId="amount" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
                 {errors.amount && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
-            <div className='input-wrap'>
-                <label htmlFor="indexDate" className="label">Index date</label>
-                <input 
-                    type="date" 
-                    id="indexDate" 
-                    {...register('indexDate', { required: true })} 
-                    className="input" 
-                    onKeyDown={(e) => e.preventDefault()} // Prevent manual input
-                />
-                {errors.indexDate && <span className="text-red-500 text-xs">This field is required</span>}
-            </div>
+            {type === 'add' ? (
+                <div className='input-wrap'>
+                    <label htmlFor="indexDate" className="label">Index date</label>
+                    <input 
+                        type="date" 
+                        id="indexDate" 
+                        {...register('indexDate', { required: true })} 
+                        className="input" 
+                        onKeyDown={(e) => e.preventDefault()} // Prevent manual input
+                    />
+                    {errors.indexDate && <span className="text-red-500 text-xs">This field is required</span>}
+                </div>
+                ) : (
+                    <div className='input-wrap'>
+                        <label htmlFor="indexDate" className="label">Index date</label>
+                        <input
+                            type="text" 
+                            id="indexDate" 
+                            disabled
+                            {...register('indexDate')}
+                            className="input text-[#606060]" 
+                            onKeyDown={(e) => e.preventDefault()} // Prevent manual input
+                        />
+                        {errors.indexDate && <span className="text-red-500 text-xs">This field is required</span>}
+                    </div>
+                ) 
+            }
+            {type === 'add' && (
+                <div className="input-wrap">
+                    <label htmlFor="frequency" className="label">Generate all payment instances to date as:</label>
+                    <div className="chip-selection-wrapper mt-2">
+                        <div className={`chip ${!instanceAsCompleted ? 'pending-state' : ''}`} onClick={() => setInstanceAsCompleted(false)}>Pending</div>
+                        <div className={`chip ${instanceAsCompleted ? 'completed-state' : ''}`} onClick={() => setInstanceAsCompleted(true)}>Completed</div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

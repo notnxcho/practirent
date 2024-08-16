@@ -1,10 +1,10 @@
 import { Edit, Trash, Xmark } from 'iconoir-react'
-import { Currency, EntryPayment, Expense, ExpensePayment, Property } from '../../types/property'
+import { Currency, EntryPayment, Expense, ExpensePayment, Income, IncomePayment, Property } from '../../types/property'
 import './propertyIncomeTabStyles.scss'
 import { formatDate } from 'src/utils'
 import { useMemo, useState } from 'react'
 import DeleteConfirmationDialog from '../dialog/DeleteConfirmationDialog'
-import {  deletePropertyIncome, updateIncomePayment } from 'src/services/firestoreService'
+import { deletePropertyIncome, updateIncomePayment } from 'src/services/firestoreService'
 import { useAuth } from 'src/contexts/AuthContext'
 import { useProperties } from 'src/contexts/PropertiesContext'
 import { toast } from 'react-toastify'
@@ -12,6 +12,25 @@ import PaymentCard from '../paymentCard/PaymentCard'
 import EditIncomeDialog from '../dialog/EditIncomeDialog'
 import EditPaymentDialog from '../dialog/EditPaymentDialog'
 import { SubmitHandler } from 'react-hook-form'
+
+const calculateUpcomingPayment = (income: Income) => {
+    const today = new Date()
+    let currentDate = new Date(income.indexDate)
+
+    // Calculate past payments
+    while (currentDate <= today) {
+        currentDate = income.frequency.unit === 'm'
+            ? new Date(currentDate.setMonth(currentDate.getMonth() + income.frequency.value))
+            : new Date(currentDate.setFullYear(currentDate.getFullYear() + income.frequency.value))
+    }
+    return {
+        id: 'upcoming',
+        amount: income.amount,
+        date: currentDate.toISOString().split('T')[0],
+        reference: 'Upcoming Payment',
+        completed: false
+    }
+}
 
 const IncomeDetails = ({ updateIncome, onClose, property }: { updateIncome: () => void, onClose: () => void, property: Property }) => {
     const [openEditDialog, setOpenEditDialog] = useState(false)
@@ -71,8 +90,8 @@ const IncomeDetails = ({ updateIncome, onClose, property }: { updateIncome: () =
             } finally {
             setLoading(false)
             }
+        }
     }
-      }
 
     return (
         <div className={`expense-details-container-wrap ${!selectedIncome && 'collapsed'}`}>
@@ -105,11 +124,7 @@ const IncomeDetails = ({ updateIncome, onClose, property }: { updateIncome: () =
                     <div className="text-[#404040] font-semibold">Payment History</div>
                     {selectedIncome && (() => {
                         const sortedHistory = [...selectedIncome.history].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                        const futurePayments = sortedHistory.filter(payment => new Date(payment.date) > new Date()).reverse()
-                        const pastPayments = sortedHistory.filter(payment => new Date(payment.date) <= new Date())
-                        const paymentsToShow = [...futurePayments.slice(0, 1), ...pastPayments]
-
-                        return paymentsToShow.map((payment: ExpensePayment) => {
+                        return [calculateUpcomingPayment(selectedIncome), ...sortedHistory].map((payment: IncomePayment) => {
                             const isFuture = new Date(payment.date) > new Date()
                             return (
                                 <PaymentCard

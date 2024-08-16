@@ -15,7 +15,6 @@
         .input {
             font-size: 14px;
             font-weight: 400;
-            color: black;
             border: 1px solid #e1e1e1;
             padding: 8px 12px;
             border-radius: 4px;
@@ -32,7 +31,7 @@
                 justify-content: center;
                 align-items: center;
                 border-radius: 4px;
-                padding: 4px 8px;
+                padding: 6px 8px;
                 flex-grow: 1;
                 min-width: max-content;
                 background-color: #f0f0f0;
@@ -47,6 +46,16 @@
                 &.selected {
                     background-color: #000;
                     color: #fff;
+                    font-weight: 500;
+                }
+                &.completed-state {
+                    background-color: #d3f8e4;
+                    color: #18ac5a;
+                    font-weight: 500;
+                }
+                &.pending-state {
+                    background-color: #ffedbf;
+                    color: #ae7f0a;
                     font-weight: 500;
                 }
             }
