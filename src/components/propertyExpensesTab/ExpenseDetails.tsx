@@ -30,6 +30,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
 
     const handleDelete = async () => {
         if (!selectedExpense) return
+        setLoading(true)
         try {
             await deletePropertyExpense(currentUser.id, property.id, selectedExpense.id)
             toast.success('Expense deleted successfully')
@@ -39,6 +40,8 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
         } catch (error) {
             console.error('Error deleting expense', error)
             toast.error('Failed to delete expense')
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -87,7 +90,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                         <div className="text-[12px] mt-4 text-[#606060]">Date of Index</div>
                         <div className="font-medium">{formatDate(selectedExpense.indexDate.toString())}</div>
                         <div className="text-[12px] mt-3 text-[#606060]">Description</div>
-                        <div className="font-medium text-[14px] text-[#404040]">{selectedExpense.description}</div>
+                        <div className="text-[14px] mt-1 text-[#404040]">{selectedExpense.description}</div>
                         <div className="flex flex-col gap-2 absolute top-2 right-2">
                             <div className="square-button" onClick={() => setOpenEditDialog(true)}>
                                 <Edit color='#404040' width={16} height={16}/>
@@ -127,7 +130,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                 </div>
             </div>
             {openEditDialog && selectedExpense && <EditExpenseDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} propertyId={property.id} />}
-            {openDeleteDialog && <DeleteConfirmationDialog isOpen={openDeleteDialog} close={() => setOpenDeleteDialog(false)} onDelete={handleDelete} />}
+            {openDeleteDialog && <DeleteConfirmationDialog isOpen={openDeleteDialog} loading={loading} close={() => setOpenDeleteDialog(false)} onDelete={handleDelete} />}
             {openEditPaymentDialog && selectedExpense && 
                 <EditPaymentDialog 
                     isOpen={openEditPaymentDialog} 

@@ -10,10 +10,7 @@ function Login() {
 
   useEffect(() => {
     if (currentUser) {
-      const timer = setTimeout(() => {
-        navigate('/')
-      }, 2000)
-      return () => clearTimeout(timer)
+      navigate('/')
     }
   }, [currentUser, navigate])
   return (

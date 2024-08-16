@@ -52,7 +52,7 @@ const EditIncomeDialog = ({ isOpen, close, propertyId }: EditIncomeDialogProps) 
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
                     <AddExpenseForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} frequency={frequency} setFrequency={setFrequency} />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Update Income</Button>
+                    <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Update Income</Button>
                 </form>
             </div>
         </div>

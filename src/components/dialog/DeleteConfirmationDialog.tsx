@@ -3,7 +3,7 @@ import Button from '../common/Button/Button'
 import { Xmark } from 'iconoir-react'
 import './dialogStyles.scss'
 
-const DeleteConfirmationDialog = ({ isOpen, close, onDelete, title = "Delete", message = "Are you sure you want to proceed? this action cannot be rolled back" }: { isOpen: boolean, close: () => void, onDelete: () => void, title?: string, message?: string }) => {
+const DeleteConfirmationDialog = ({ isOpen, close, onDelete, loading, title = "Delete", message = "Are you sure you want to proceed? this action cannot be rolled back" }: { isOpen: boolean, close: () => void, onDelete: () => void, loading: boolean, title?: string, message?: string }) => {
     const [isConfirmEnabled, setIsConfirmEnabled] = useState(false)
     const [timer, setTimer] = useState(5)
 
@@ -40,7 +40,7 @@ const DeleteConfirmationDialog = ({ isOpen, close, onDelete, title = "Delete", m
                     </div>
                     <div className="flex w-full justify-end gap-2">
                         <Button variant='secondary' onClick={close}>Cancel</Button>
-                        <Button variant='danger' onClick={onDelete} disabled={!isConfirmEnabled}>
+                        <Button variant='danger' onClick={onDelete} disabled={!isConfirmEnabled || loading}>
                             Delete{!!timer && ` (${timer}s)`}
                         </Button>
                     </div>

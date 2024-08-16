@@ -1,3 +1,49 @@
+import { Property } from 'src/types/property'
+
+const UYU_TO_USD_CONVERSION_RATE = 40
+
+const convertToUSD = (amount: number, currency: string) => {
+    return currency === 'USD' ? amount : amount / UYU_TO_USD_CONVERSION_RATE
+}
+
+const calculateAnnualizedAmount = (amount: number, frequency: string) => {
+    switch (frequency) {
+        case 'Monthly':
+            return amount * 12
+        case 'Quarterly':
+            return amount * 4
+        case 'Yearly':
+            return amount
+        default:
+            return amount
+    }
+}
+
+export const calculateKpis = (property: Property) => {
+    const totalRevenue = property.incomes?.reduce((sum, income) => {
+        const annualizedAmount = calculateAnnualizedAmount(income.amount.amount ?? 0, income.frequency.frequency)
+        return sum + convertToUSD(annualizedAmount, income.amount.currency.symbol)
+    }, 0) || 0
+
+    const operatingCost = property.expenses?.reduce((sum, expense) => {
+        const annualizedAmount = calculateAnnualizedAmount(expense.amount.amount ?? 0, expense.frequency.frequency)
+        return sum + convertToUSD(annualizedAmount, expense.amount.currency.symbol)
+    }, 0) || 0
+
+    const profitMargin = totalRevenue - operatingCost
+    const incomeToExpenseRatio = operatingCost !== 0 ? totalRevenue / operatingCost : 0
+    const assetYield = property.marketValue ? (profitMargin / convertToUSD(property.marketValue.amount ?? 0, property.marketValue.currency.symbol)) * 100 : 0
+
+    return {
+        totalRevenue,
+        operatingCost,
+        profitMargin,
+        incomeToExpenseRatio,
+        assetYield
+    }
+}
+
+
 export function formatDate(dateString: string): string {
     const date = new Date(dateString)
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' }

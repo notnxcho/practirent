@@ -51,7 +51,7 @@ const EditPropertyDialog = ({ isOpen, close, property }: EditPropertyDialogProps
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
                     <AddPropertyForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Update Property</Button>
+                    <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Update Property</Button>
                 </form>
             </div>
         </div>

@@ -7,7 +7,7 @@ import Login from './components/auth/Login'
 import Signup from './components/auth/Signup'
 import Properties from './pages/properties/Properties'
 import PropertyDetails from './pages/properties/PropertyDetails'
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
@@ -21,7 +21,16 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
-        <ToastContainer />
+        <ToastContainer
+          position="bottom-center"
+          autoClose={2500}
+          hideProgressBar={false}
+          closeOnClick={false}
+          pauseOnHover={true}
+          draggable={true}
+          theme="dark"
+          transition={Slide}
+        />
       </PropertiesProvider>
     </AuthProvider>
   )

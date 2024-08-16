@@ -1,4 +1,4 @@
-import { collection, addDoc, getDoc, doc, setDoc, updateDoc } from "firebase/firestore"; 
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore"; 
 import { firestoreDB } from "../firebase";
 import { User } from "../types/user";
 import { Expense, ExpensePayment, Income, IncomePayment, Property } from "src/types/property";

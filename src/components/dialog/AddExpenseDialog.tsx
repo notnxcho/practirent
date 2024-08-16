@@ -92,7 +92,7 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
                         frequency={frequency}
                         setFrequency={setFrequency} 
                     />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Expense</Button>
+                    <Button type='submit' loading={loading} fullWidth size='large' disabled={loading} className='mt-4'>Add Expense</Button>
                 </form>
             </div>
         </div>

@@ -48,7 +48,7 @@ const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
                     <AddPropertyForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Property</Button>
+                    <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Add Property</Button>
                 </form>
             </div>
         </div>

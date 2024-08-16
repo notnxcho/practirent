@@ -5,7 +5,7 @@ const AddressWidget = ({address, padron}: {address: Address, padron: string}) =>
     return (
         <div className="address-widget-body">
             <div className="flex items-center gap-2 text-[18px] font-medium">Address Info</div>
-            <div className="flex items-center gap-8 justify-between w-full flex-wrap">
+            <div className="flex items-center gap-8 justify-between w-full flex-wrap flex-shrink">
                 <div className="address-item">
                     <div className="label">Address</div>
                     <div className="value">{address?.addressString || 'No address'}</div>

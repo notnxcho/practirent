@@ -92,7 +92,7 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
                         frequency={frequency}
                         setFrequency={setFrequency} 
                     />
-                    <Button type='submit' loading={loading} fullWidth size='large' className='mt-4'>Add Income</Button>
+                    <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Add Income</Button>
                 </form>
             </div>
         </div>

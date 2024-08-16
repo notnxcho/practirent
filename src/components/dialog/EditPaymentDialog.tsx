@@ -43,7 +43,7 @@ const EditPaymentDialog = ({ isOpen, close, loading, payment, currencySymbol, se
                 </div>
                 <div className="flex w-full justify-end gap-2 mt-4">
                   <Button variant='secondary' onClick={close}>Cancel</Button>
-                  <Button variant='primary' type='submit' loading={loading}>Save</Button>
+                  <Button variant='primary' type='submit' disabled={loading} loading={loading}>Save</Button>
                 </div>
               </form>
             </div>
