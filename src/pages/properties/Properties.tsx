@@ -4,6 +4,7 @@ import Layout from "../layout"
 import { useProperties } from "../../contexts/PropertiesContext"
 import PropertyCard from "../../components/propertyCard/PropertyCard"
 import { Property } from "src/types/property"
+import EmptyState from "../../assets/empty-state.png"
 
 const Properties = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
@@ -26,6 +27,12 @@ const Properties = () => {
             <div className="cta" onClick={toggleOpenDialog}>Add Property</div>
           </div>
         </div>
+        {!properties.length && !loading && (
+          <div className="empty-state">
+            <img src={EmptyState} alt="empty-state" />
+            <div className="empty-state-text">No properties available</div>
+          </div>
+        )}
         <div className="properties-grid">
           {properties.map(
             (prop: Property, index: number) => {

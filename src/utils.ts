@@ -22,12 +22,12 @@ const calculateAnnualizedAmount = (amount: number, frequency: string) => {
 export const calculateKpis = (property: Property) => {
     const totalRevenue = property.incomes?.reduce((sum, income) => {
         const annualizedAmount = calculateAnnualizedAmount(income.amount.amount ?? 0, income.frequency.frequency)
-        return sum + convertToUSD(annualizedAmount, income.amount.currency.symbol)
+        return +sum + +convertToUSD(annualizedAmount, income.amount.currency.symbol)
     }, 0) || 0
 
     const operatingCost = property.expenses?.reduce((sum, expense) => {
         const annualizedAmount = calculateAnnualizedAmount(expense.amount.amount ?? 0, expense.frequency.frequency)
-        return sum + convertToUSD(annualizedAmount, expense.amount.currency.symbol)
+        return +sum + +convertToUSD(annualizedAmount, expense.amount.currency.symbol)
     }, 0) || 0
 
     const profitMargin = totalRevenue - operatingCost
@@ -35,11 +35,11 @@ export const calculateKpis = (property: Property) => {
     const assetYield = property.marketValue ? (profitMargin / convertToUSD(property.marketValue.amount ?? 0, property.marketValue.currency.symbol)) * 100 : 0
 
     return {
-        totalRevenue,
-        operatingCost,
-        profitMargin,
-        incomeToExpenseRatio,
-        assetYield
+        totalRevenue: +totalRevenue.toFixed(0),
+        operatingCost: +operatingCost.toFixed(0),
+        profitMargin: +profitMargin.toFixed(0),
+        incomeToExpenseRatio: +incomeToExpenseRatio.toFixed(3),
+        assetYield: +assetYield.toFixed(2)
     }
 }
 

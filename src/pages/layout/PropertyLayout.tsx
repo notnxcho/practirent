@@ -6,15 +6,11 @@ import { useState } from 'react'
 import EditPropertyDialog from 'src/components/dialog/EditPropertyDialog'
 import { Trash } from "iconoir-react"
 import DeletePropertyDialog from 'src/components/dialog/DeletePropertyDialog'
-import { deleteProperty } from 'src/services/firestoreService'
-import { useAuth } from 'src/contexts/AuthContext'
-import { toast } from "react-toastify"
 
 const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }: { children: React.ReactNode, property: Property | null, tabs: {name: string, active: boolean}[], setTabs: any, onUpdateProperty: (updatedProperty: Property) => void}) => {
     const navigate = useNavigate()
     const [openEditDialog, setOpenEditDialog] = useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
-    const { currentUser } = useAuth()
 
     return (
         <div className="flex flex-col min-h-[100vh]">
@@ -52,16 +48,7 @@ const PropertyLayout = ({ children, property, tabs, setTabs, onUpdateProperty }:
             </div>
             {children}
             {openEditDialog && property && <EditPropertyDialog isOpen={openEditDialog} close={() => setOpenEditDialog(false)} property={property} />}
-            {openDeleteDialog && property && <DeletePropertyDialog isOpen={openDeleteDialog} close={() => setOpenDeleteDialog(false)} property={property} onDelete={async () => {
-                try {
-                    await deleteProperty(currentUser.id, property.id)
-                    setOpenDeleteDialog(false)
-                    navigate('/properties')
-                    toast.success('Property deleted successfully')
-                } catch (error) {
-                    toast.error('Error deleting property')
-                }
-            }} />}
+            {openDeleteDialog && property && <DeletePropertyDialog isOpen={openDeleteDialog} close={() => setOpenDeleteDialog(false)} property={property} />}
         </div>
     )
 }

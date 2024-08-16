@@ -9,6 +9,7 @@ import Properties from './pages/properties/Properties'
 import PropertyDetails from './pages/properties/PropertyDetails'
 import { ToastContainer, Slide } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import NotFound from './components/common/NotFound/NotFound'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/properties/:id" element={<PrivateRoute component={PropertyDetails} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <ToastContainer
           position="bottom-center"

@@ -6,6 +6,7 @@ import Button from '../common/Button/Button'
 import AddExpenseDialog from '../dialog/AddExpenseDialog'
 import ExpenseDetails from './ExpenseDetails'
 import { useProperties } from 'src/contexts/PropertiesContext'
+import EmptyState from '../../assets/empty-state.png'
 
 const PropertyExpensesTab = ({property}: {property: Property}) => {
     const [openDialog, setOpenDialog] = useState<boolean>(false)
@@ -26,6 +27,12 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
                     Expenses
                     <Button onClick={toggleOpenDialog}>Add Expense</Button>
                 </div>
+                {!property?.expenses?.length && (
+                    <div className="empty-state">
+                        <img src={EmptyState} alt="empty-state" />
+                        <div className="empty-state-text">No expenses available</div>
+                    </div>
+                )}
                 <div className="expenses-grid">
                     {property?.expenses?.map((expense) => (
                         <PropertyExpenseCard 

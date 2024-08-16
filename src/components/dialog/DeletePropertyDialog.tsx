@@ -3,15 +3,30 @@ import { Property } from 'src/types/property'
 import Button from '../common/Button/Button'
 import { Xmark } from 'iconoir-react'
 import './dialogStyles.scss'
+import { toast } from 'react-toastify'
+import { useAuth } from 'src/contexts/AuthContext'
+import { deleteProperty } from 'src/services/firestoreService'
 
-const DeletePropertyDialog = ({ isOpen, close, property, onDelete }: { isOpen: boolean, close: () => void, property: Property, onDelete: () => void }) => {
+const DeletePropertyDialog = ({ isOpen, close, property }: { isOpen: boolean, close: () => void, property: Property }) => {
     const [inputValue, setInputValue] = useState('')
     const [isConfirmEnabled, setIsConfirmEnabled] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const { currentUser } = useAuth()
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
         setInputValue(value)
         setIsConfirmEnabled(value === property.name)
+    }
+
+    const handleDeleteProperty = async () => {
+        try {
+            await deleteProperty(currentUser.id, property.id)
+            close()
+            toast.success('Property deleted successfully')
+        } catch (error) {
+            toast.error('Error deleting property')
+        }
     }
 
     return (
@@ -31,7 +46,7 @@ const DeletePropertyDialog = ({ isOpen, close, property, onDelete }: { isOpen: b
                         </div>
                     </div>
                     <div className="flex w-full justify-end">
-                        <Button variant='danger' onClick={onDelete} disabled={!isConfirmEnabled}>Delete</Button>
+                        <Button variant='danger' onClick={handleDeleteProperty} loading={loading} disabled={!isConfirmEnabled || loading}>{loading ? 'Deleting...' : 'Delete'}</Button>
                     </div>
                 </div>
             </div>
