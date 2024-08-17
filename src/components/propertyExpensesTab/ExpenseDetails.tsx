@@ -67,7 +67,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
 
     const onSubmit: SubmitHandler<ExpensePayment> = async (data) => {
         setLoading(true)
-        const updatedPayment = { ...payment, amount: { amount: data.amount?.amount, currency: payment?.amount.currency ?? { symbol: "USD", currency: "usd" } }, id: payment?.id ?? '', completed, date: payment?.date ?? new Date().toISOString(), reference: data.reference }
+        const updatedPayment = { ...payment, amount: { amount: data.amount?.amount, currency: currencySymbol }, id: payment?.id ?? '', completed, date: payment?.date ?? new Date().toISOString(), reference: data.reference }
         if (openEditPaymentDialog) {
             try {
                 await updateExpensePayment(currentUser.id, property.id, selectedExpense!.id, updatedPayment)
@@ -145,7 +145,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                                     onClick={() => {setPayment(payment); setOpenEditPaymentDialog(true)}}
                                 />
                             )
-                        })
+                        }) 
                     })()}
                 </div>
             </div>
@@ -156,14 +156,14 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                     isOpen={openEditPaymentDialog} 
                     close={() => setOpenEditPaymentDialog(false)} 
                     loading={loading} 
-                    propertyId={property.id} 
-                    entry={selectedExpense} 
+                    // propertyId={property.id} 
+                    // entry={selectedExpense} 
                     payment={payment}
                     currencySymbol={currencySymbol}
                     setCurrencySymbol={setCurrencySymbol}
                     completed={completed}
                     setCompleted={setCompleted}
-                    updateEntry={updateExpense}
+                    // updateEntry={updateExpense}
                     onSubmit={onSubmit} 
                 />
             }

@@ -149,14 +149,14 @@ const IncomeDetails = ({ updateIncome, onClose, property }: { updateIncome: () =
                     isOpen={openEditPaymentDialog} 
                     close={() => setOpenEditPaymentDialog(false)} 
                     loading={loading} 
-                    propertyId={property.id} 
-                    entry={selectedIncome} 
+                    // propertyId={property.id} 
+                    // entry={selectedIncome} 
                     payment={payment} 
                     currencySymbol={currencySymbol}
                     setCurrencySymbol={setCurrencySymbol}
                     completed={completed}
                     setCompleted={setCompleted}
-                    updateEntry={updateIncome}
+                    // updateEntry={updateIncome}
                     onSubmit={onSubmit} 
                 />
             }

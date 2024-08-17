@@ -6,7 +6,7 @@ import { Xmark } from 'iconoir-react'
 import { useForm } from 'react-hook-form'
 import './dialogStyles.scss'
 
-const EditPaymentDialog = ({ isOpen, close, loading, payment, currencySymbol, setCurrencySymbol, completed, setCompleted, propertyId, entry, updateEntry, onSubmit }: EditPaymentDialogProps) => {
+const EditPaymentDialog = ({ isOpen, close, loading, payment, currencySymbol, setCurrencySymbol, completed, setCompleted, onSubmit }: EditPaymentDialogProps) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<EntryPayment>()
 
   useEffect(() => {
@@ -61,9 +61,6 @@ interface EditPaymentDialogProps {
   setCurrencySymbol: (currency: Currency) => void
   completed: boolean
   setCompleted: (completed: boolean) => void
-  propertyId: string
-  entry: Expense | Income
-  updateEntry: () => void
   onSubmit: (data: EntryPayment) => void
 }
 

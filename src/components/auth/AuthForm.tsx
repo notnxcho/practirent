@@ -42,7 +42,6 @@ const AuthForm = ({ type }: { type: 'signup' | 'login' }) => {
               name: `${data.name} ${data.lastName}` || '',
               properties: []
             })
-            navigate('/properties')
             toast.success('Signup successful')
           })
           .catch((error: any) => {
@@ -50,7 +49,6 @@ const AuthForm = ({ type }: { type: 'signup' | 'login' }) => {
           })
       } else {
         await login(data.email, data.password)
-        navigate('/properties')
         toast.success('Login successful')
       }
     } catch (error: any) {
