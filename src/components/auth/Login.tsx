@@ -10,7 +10,7 @@ function Login() {
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/')
+      navigate('/properties')
     }
   }, [currentUser, navigate])
   return (

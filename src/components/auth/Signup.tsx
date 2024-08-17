@@ -9,10 +9,7 @@ const Signup = () => {
   
   useEffect(() => {
     if (currentUser) {
-      const timer = setTimeout(() => {
-        navigate('/')
-      }, 2000)
-      return () => clearTimeout(timer)
+      navigate('/properties')
     }
   }, [currentUser, navigate])
 

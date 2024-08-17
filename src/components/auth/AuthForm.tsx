@@ -42,19 +42,19 @@ const AuthForm = ({ type }: { type: 'signup' | 'login' }) => {
               name: `${data.name} ${data.lastName}` || '',
               properties: []
             })
+            navigate('/properties')
             toast.success('Signup successful')
           })
           .catch((error: any) => {
             setError({ message: error.message })
-            toast.error('Signup failed')
           })
       } else {
         await login(data.email, data.password)
+        navigate('/properties')
         toast.success('Login successful')
       }
     } catch (error: any) {
       setError({ message: error.message })
-      toast.error('Login failed')
     } finally {
       setLoading(false)
     }
@@ -94,7 +94,7 @@ const AuthForm = ({ type }: { type: 'signup' | 'login' }) => {
         </div>
         {type === 'login' && <div className='text-right text-[14px] text-gray-500 cursor-pointer hover:text-gray-600 underline underline-offset-2'>Forgot?</div>}
         <div className='flex flex-col mt-6 gap-3'>
-          <Button type='submit' loading={loading} size='large'>
+          <Button type='submit' loading={loading} size='large' disabled={loading} >
             {type === 'login' ? 'Login' : 'Sign Up'}
           </Button>
           <div className='text-center text-[14px] text-gray-500'>{type === 'login' ? "Don't have an account?" : "Already have an account?"} <span className='text-gray-600 cursor-pointer hover:text-gray-700 underline underline-offset-2' onClick={() => navigate(type === 'login' ? '/signup' : '/login')}>{type === 'login' ? 'Sign Up' : 'Login'}</span></div>
