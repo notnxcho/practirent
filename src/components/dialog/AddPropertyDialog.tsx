@@ -46,7 +46,7 @@ const AddPropertyDialog = ({isOpen, close}: PropertyDialogProps) => {
                         <Xmark color="#404040"/>
                     </div>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
+                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[uwu]">
                     <AddPropertyForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
                     <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Add Property</Button>
                 </form>

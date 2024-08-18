@@ -11,9 +11,9 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
             </div>
             <div className='input-wrap'>
                 <label htmlFor="description" className="label">Description</label>
-                <textarea id="description" {...register('description')} className="input h-fit max-h-[90px] min-h-[60px]" />
+                <textarea id="description" {...register('description')} className="input h-fit max-h-[120px] min-h-[60px]" />
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-col md:flex-row">
                 <div className='input-wrap'>
                     <label htmlFor="marketValue" className="label">Market Value</label>
                     <CurrencyInput passId="marketValue" passRegister={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} />
@@ -29,7 +29,7 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
                 <input id="addressString" {...register('address.addressString', { required: true })} className="input" />
                 {errors.address?.addressString && <span className="text-red-500 text-xs">This field is required</span>}
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-col md:flex-row">
                 <div className='input-wrap'>
                     <label htmlFor="street" className="label">Street</label>
                     <input id="street" {...register('address.street', { required: true })} className="input" />
@@ -40,7 +40,7 @@ const AddPropertyForm = ({errors, register, currencySymbol, setCurrencySymbol}: 
                     <input id="streetNumber" {...register('address.streetNumber')} className="input" />
                 </div>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-col md:flex-row">
                 <div className='input-wrap'>
                     <label htmlFor="city" className="label">City</label>
                     <input id="city" {...register('address.city', { required: true })} className="input" />

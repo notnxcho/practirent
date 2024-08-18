@@ -106,7 +106,7 @@ const AddIncomeDialog = ({isOpen, close, propertyId}: IncomeDialogProps) => {
                         <Xmark color="#404040"/>
                     </div>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
+                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[uwu]">
                     <AddExpenseForm 
                         errors={errors}
                         register={register}

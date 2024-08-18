@@ -50,7 +50,7 @@ const EditExpenseDialog = ({ isOpen, close, propertyId }: EditExpenseDialogProps
                         <Xmark color="#404040"/>
                     </div>
                 </div>
-                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[400px]">
+                <form onSubmit={handleSubmit(onSubmit)} className="form-container min-w-[uwu]">
                     <AddExpenseForm errors={errors} register={register} currencySymbol={currencySymbol} setCurrencySymbol={setCurrencySymbol} frequency={frequency} setFrequency={setFrequency} type="edit"/>
                     <Button type='submit' loading={loading} disabled={loading} fullWidth size='large' className='mt-4'>Update Expense</Button>
                 </form>

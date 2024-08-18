@@ -22,8 +22,8 @@ const PropertyIncomesTab = ({property}: {property: Property}) => {
 
     return (
         <div className="flex grow">
-            <div className="property-expenses-tab">
-                <div className="header mb-4">
+            <div className={`property-expenses-tab ${selectedIncome&& 'collapsed'}`}>
+                <div className="header">
                     Incomes
                     <Button onClick={toggleOpenDialog}>Add Income</Button>
                 </div>

@@ -22,8 +22,8 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
 
     return (
         <div className="flex grow">
-            <div className="property-expenses-tab">
-                <div className="header mb-4">
+            <div className={`property-expenses-tab ${selectedExpense && 'collapsed'}`}>
+                <div className="header">
                     Expenses
                     <Button onClick={toggleOpenDialog}>Add Expense</Button>
                 </div>

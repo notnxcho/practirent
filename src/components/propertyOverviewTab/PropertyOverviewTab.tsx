@@ -9,7 +9,7 @@ const PropertyOverviewTab = ({ property }: { property: Property }) => {
 
     return (
         <div className="flex flex-col gap-3 p-4">
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-col md:flex-row">
                 <AddressWidget address={property.address} padron={property.padron || ''} />
                 <div className="flex flex-col border rounded-lg p-4 gap-2 bg-white flex-grow flex-shrink">
                     <div className="text-[14px] font-semibold text-[#606060]">Description</div>
