@@ -1,0 +1,30 @@
+.kpi-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .kpi-card {
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .kpi-title {
+    font-size: 14px;
+    color: #606060;
+  }
+  
+  .kpi-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #202020;
+  }
