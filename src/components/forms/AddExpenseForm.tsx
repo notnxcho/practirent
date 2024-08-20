@@ -6,6 +6,7 @@ const AddExpenseForm = ({errors, register, currencySymbol, setCurrencySymbol, fr
     const frequencies: Frequency[] = [
         {frequency: 'Monthly', value: 1, unit: 'm'},
         {frequency: 'Quarterly', value: 3, unit: 'm'},
+        {frequency: 'Four-Month Period', value: 4, unit: 'm'},
         {frequency: 'Semestral', value: 6, unit: 'm'},
         {frequency: 'Yearly', value: 1, unit: 'y'},
     ]

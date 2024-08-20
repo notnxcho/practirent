@@ -12,6 +12,10 @@ const calculateAnnualizedAmount = (amount: number, frequency: string) => {
             return amount * 12
         case 'Quarterly':
             return amount * 4
+        case 'Four-Month Period':
+            return amount * 3
+        case 'Semestral':
+            return amount * 2
         case 'Yearly':
             return amount
         default:
