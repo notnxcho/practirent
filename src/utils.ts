@@ -1,4 +1,4 @@
-import { Expense, Income, Property } from 'src/types/property'
+import { Expense, Income, Property } from './types/property'
 
 const UYU_TO_USD_CONVERSION_RATE = 40
 
