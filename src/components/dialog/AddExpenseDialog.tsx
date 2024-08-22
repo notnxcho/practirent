@@ -59,8 +59,6 @@ const AddExpenseDialog = ({isOpen, close, propertyId}: ExpenseDialogProps) => {
         const today = new Date()
         let currentDate = new Date(data.indexDate)
 
-        console.log(data, 'thedadttata', frequency)
-
         // Calculate past payments
         while (currentDate <= today) {
             payments.push({

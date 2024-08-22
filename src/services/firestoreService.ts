@@ -1,7 +1,8 @@
-import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore"; 
+import { getDoc, doc, setDoc, updateDoc, collection } from "firebase/firestore"; 
 import { firestoreDB } from "../firebase";
 import { User } from "../types/user";
 import { Expense, ExpensePayment, Income, IncomePayment, Property } from "src/types/property";
+import { formatDate } from "src/utils";
 
 export const addUserDocument = async (user: User) => {
     try {
@@ -290,3 +291,47 @@ export const updateIncomePayment = async (userId: string, propertyId: string, in
         throw new Error("User document does not exist") 
     }
 }
+
+export const calculateMissingPaymentsToDate = async (userId: string, propertyId: string, itemId: string, type: 'expense' | 'income') => {
+    const userRef = doc(firestoreDB, 'users', userId)
+    const userDoc = await getDoc(userRef)
+    if (userDoc.exists()) {
+        const userData = userDoc.data()
+        const properties = userData.properties || []
+        const propertyIndex = properties.findIndex((prop: Property) => prop.id === propertyId)
+        if (propertyIndex !== -1) {
+            const property = properties[propertyIndex]
+            const itemIndex = type === 'expense' 
+                ? property.expenses.findIndex((exp: Expense) => exp.id === itemId)
+                : property.incomes.findIndex((inc: Income) => inc.id === itemId)
+            
+            if (itemIndex !== -1) {
+                const item = type === 'expense' ? property.expenses[itemIndex] : property.incomes[itemIndex]
+                let payments = item.history
+                let lastPaymentDate = new Date(payments[payments.length - 1]?.date || item.indexDate)
+                const today = new Date()
+                console.log('llegamos aca', lastPaymentDate)
+                while (lastPaymentDate <= today) {
+                    payments.push({
+                        id: doc(collection(firestoreDB, type === 'expense' ? 'expenses' : 'incomes')).id,
+                        amount: item.amount,
+                        date: lastPaymentDate.toISOString().split('T')[0],
+                        reference: item.title + ' Payment ' + formatDate(lastPaymentDate.toISOString().split('T')[0]).split(' ').splice(1,2).join(' '),
+                        completed: false
+                    })
+                    lastPaymentDate = item.frequency.unit === 'm'
+                    ? new Date(lastPaymentDate.setMonth(lastPaymentDate.getMonth() + item.frequency.value))
+                    : new Date(lastPaymentDate.setFullYear(lastPaymentDate.getFullYear() + item.frequency.value))
+                }
+                await updateDoc(userRef, { properties })
+            } else {
+                throw new Error(`${type === 'expense' ? 'Expense' : 'Income'} not found`)
+            }
+        } else {
+            throw new Error("Property not found")
+        }
+    } else {
+        throw new Error("User document does not exist")
+    }
+}
+

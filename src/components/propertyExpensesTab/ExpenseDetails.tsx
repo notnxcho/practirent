@@ -142,7 +142,7 @@ const ExpenseDetails = ({ updateExpense, onClose, property }: { updateExpense: (
                                     amount={payment.amount.amount ?? 0}
                                     completed={payment.completed}
                                     isFuture={isFuture}
-                                    onClick={() => {setPayment(payment); setOpenEditPaymentDialog(true)}}
+                                    onClick={() => {setPayment(payment); setOpenEditPaymentDialog(true) }}
                                 />
                             )
                         }) 
