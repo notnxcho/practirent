@@ -1,8 +1,8 @@
 import { getDoc, doc, setDoc, updateDoc, collection } from "firebase/firestore"; 
 import { firestoreDB } from "../firebase";
 import { User } from "../types/user";
-import { Expense, ExpensePayment, Income, IncomePayment, Property } from "src/types/property";
-import { formatDate } from "src/utils";
+import { Expense, ExpensePayment, Income, IncomePayment, Property } from "../types/property";
+import { formatDate } from "../utils";
 
 export const addUserDocument = async (user: User) => {
     try {
