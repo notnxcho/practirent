@@ -1,4 +1,4 @@
-import { Property } from 'src/types/property'
+import { Expense, Income, Property } from 'src/types/property'
 
 const UYU_TO_USD_CONVERSION_RATE = 40
 
@@ -24,12 +24,12 @@ const calculateAnnualizedAmount = (amount: number, frequency: string) => {
 }
 
 export const calculateKpis = (property: Property) => {
-    const totalRevenue = property.incomes?.reduce((sum, income) => {
+    const totalRevenue = property.incomes?.reduce((sum: number, income: Income) => {
         const annualizedAmount = calculateAnnualizedAmount(income.amount.amount ?? 0, income.frequency.frequency)
         return +sum + +convertToUSD(annualizedAmount, income.amount.currency.symbol)
     }, 0) || 0
 
-    const operatingCost = property.expenses?.reduce((sum, expense) => {
+    const operatingCost = property.expenses?.reduce((sum: number, expense: Expense) => {
         const annualizedAmount = calculateAnnualizedAmount(expense.amount.amount ?? 0, expense.frequency.frequency)
         return +sum + +convertToUSD(annualizedAmount, expense.amount.currency.symbol)
     }, 0) || 0
