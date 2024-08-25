@@ -16,6 +16,10 @@ const PropertyExpensesTab = ({property}: {property: Property}) => {
         setSelectedExpense(selectedExpense)
     }, [property])
 
+    useEffect(() => {
+        setSelectedExpense(null)
+    }, [])
+
     const toggleOpenDialog = () => {
         setOpenDialog(!openDialog)
     }

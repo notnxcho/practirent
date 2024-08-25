@@ -16,6 +16,10 @@ const PropertyIncomesTab = ({property}: {property: Property}) => {
         setSelectedIncome(selectedIncome)
     }, [property])
 
+    useEffect(() => {
+        setSelectedIncome(null)
+    }, [])
+
     const toggleOpenDialog = () => {
         setOpenDialog(!openDialog)
     }
