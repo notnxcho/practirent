@@ -1,4 +1,4 @@
-import { Expense, Income, Property } from './types/property'
+import { Expense, ExpensePayment, Income, IncomePayment, Property } from './types/property'
 
 const UYU_TO_USD_CONVERSION_RATE = 40
 
@@ -52,4 +52,16 @@ export function formatDate(dateString: string): string {
     const date = new Date(dateString)
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' }
     return date.toLocaleDateString('en-GB', options).replace(/ /g, ' ')
+}
+
+export function sumAmountsPerCurrency(payments: (IncomePayment | ExpensePayment)[]) {
+    const res = payments.reduce((acc: any, payment: ExpensePayment | IncomePayment) => {
+        const currency = payment.amount.currency.symbol
+        if (!acc[currency]) {
+            acc[currency] = 0
+        }
+        acc[currency] = +acc[currency] + (payment.amount.amount ? +payment.amount.amount : 0)
+        return acc
+    }, {})
+    return res
 }

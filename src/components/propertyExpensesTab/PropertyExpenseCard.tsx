@@ -1,19 +1,12 @@
 import { Expense, ExpensePayment } from 'src/types/property'
 import './propertyExpensesTabStyles.scss'
-import { formatDate } from 'src/utils'
+import { formatDate, sumAmountsPerCurrency } from 'src/utils'
 
 const PropertyExpenseCard = ({expense, selected, onSelect}: {expense: Expense, selected: boolean, onSelect: () => void}) => {
     const renderPaymentHistoryOverview = () => {
         const incompletePayments = expense.history.filter(payment => !payment.completed)
         if (incompletePayments.length > 1) {
-            const currencySums = incompletePayments.reduce((acc: any, payment: ExpensePayment) => {
-                const currency = payment.amount.currency.symbol
-                if (!acc[currency]) {
-                    acc[currency] = 0
-                }
-                acc[currency] = +acc[currency] + (payment.amount.amount ? +payment.amount.amount : 0)
-                return acc
-            }, {})
+            const currencySums = sumAmountsPerCurrency(incompletePayments)
             return (
                 <div className='flex items-center w-full justify-between gap-6'>
                     <div className='flex items-center gap-3'>

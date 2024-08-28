@@ -1,6 +1,7 @@
 import { Property } from "src/types/property"
 import { useNavigate } from 'react-router-dom'
 import './propertyCardStyles.scss'
+import { sumAmountsPerCurrency } from "src/utils"
 
 const PropertyCard = ({property}: {property: Property}) => {
     const navigate = useNavigate()
@@ -32,14 +33,14 @@ const PropertyCard = ({property}: {property: Property}) => {
                         <div className="badge">
                             <span className="light-indicator"></span>
                             <div className="label">Due expenses</div>
-                            <div className="value">{unpaidExpenses.map(expense => `${expense.amount.amount} ${expense.amount.currency.symbol}`).join(', ')}</div>
+                            <div className="value">{sumAmountsPerCurrency(unpaidExpenses)}</div>
                         </div>
                     )}
                     {unpaidIncomes.length > 0 && (
                         <div className="badge">
                             <span className="light-indicator"></span>
                             <div className="label">Due incomes</div>
-                            <div className="value">{unpaidIncomes.map(income => `${income.amount.amount} ${income.amount.currency.symbol}`).join(', ')}</div>
+                            <div className="value">{sumAmountsPerCurrency(unpaidIncomes)}</div>
                         </div>
                     )}
                 </div>
