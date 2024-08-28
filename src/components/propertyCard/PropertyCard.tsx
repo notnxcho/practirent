@@ -22,9 +22,12 @@ const PropertyCard = ({property}: {property: Property}) => {
         ) || []
     }
 
+
     const renderBadges = () => {
         const unpaidExpenses = calculateUnpaidExpenses()
         const unpaidIncomes = calculateUnpaidIncomes()
+        console.log('nansnda', unpaidExpenses)
+        console.log('res', sumAmountsPerCurrency(unpaidExpenses))
 
         if (unpaidExpenses.length > 0 || unpaidIncomes.length > 0) {
             return (
@@ -33,14 +36,26 @@ const PropertyCard = ({property}: {property: Property}) => {
                         <div className="badge">
                             <span className="light-indicator"></span>
                             <div className="label">Due expenses</div>
-                            <div className="value">{sumAmountsPerCurrency(unpaidExpenses)}</div>
+                            <div className="value">
+                                {Object.entries(sumAmountsPerCurrency(unpaidExpenses)).map(([currency, sum]: any) => (
+                                    <div key={currency} className="flex items-center gap-1">
+                                        <span>{currency}</span>
+                                        <span>{sum}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                     {unpaidIncomes.length > 0 && (
                         <div className="badge">
                             <span className="light-indicator"></span>
                             <div className="label">Due incomes</div>
-                            <div className="value">{sumAmountsPerCurrency(unpaidIncomes)}</div>
+                                {Object.entries(sumAmountsPerCurrency(unpaidIncomes)).map(([currency, sum]: any) => (
+                                    <div key={currency} className="flex items-center gap-1">
+                                        <span>{currency}</span>
+                                        <span>{sum}</span>
+                                    </div>
+                                ))}
                         </div>
                     )}
                 </div>

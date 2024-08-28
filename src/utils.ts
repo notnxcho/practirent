@@ -55,13 +55,16 @@ export function formatDate(dateString: string): string {
 }
 
 export function sumAmountsPerCurrency(payments: (IncomePayment | ExpensePayment)[]) {
+    console.log('entro aca')
     const res = payments.reduce((acc: any, payment: ExpensePayment | IncomePayment) => {
         const currency = payment.amount.currency.symbol
+        console.log('acc', acc)
         if (!acc[currency]) {
             acc[currency] = 0
         }
         acc[currency] = +acc[currency] + (payment.amount.amount ? +payment.amount.amount : 0)
         return acc
     }, {})
+    console.log('res', res)
     return res
 }
